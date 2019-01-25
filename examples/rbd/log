@@ -1,0 +1,1363 @@
+I0125 12:01:35.441222       1 main.go:76] Version: v1.0.1-1-g39b8e8fa
+I0125 12:01:35.497795       1 connection.go:86] Connecting to /csi/csi.sock
+I0125 12:01:35.498141       1 connection.go:114] Still trying, connection is CONNECTING
+I0125 12:01:35.499084       1 connection.go:111] Connected
+I0125 12:01:35.499110       1 connection.go:270] GRPC call: /csi.v1.Identity/GetPluginInfo
+I0125 12:01:35.499116       1 connection.go:271] GRPC request: {}
+I0125 12:01:35.504882       1 connection.go:273] GRPC response: {"name":"csi-rbdplugin","vendor_version":"1.0.0"}
+I0125 12:01:35.505501       1 connection.go:274] GRPC error: <nil>
+I0125 12:01:35.505510       1 main.go:135] CSI driver name: "csi-rbdplugin"
+I0125 12:01:35.505528       1 connection.go:270] GRPC call: /csi.v1.Identity/Probe
+I0125 12:01:35.505538       1 connection.go:271] GRPC request: {}
+I0125 12:01:35.508035       1 connection.go:273] GRPC response: {}
+I0125 12:01:35.508744       1 connection.go:274] GRPC error: <nil>
+I0125 12:01:35.508755       1 main.go:205] Probe succeeded
+I0125 12:01:35.508765       1 connection.go:270] GRPC call: /csi.v1.Controller/ControllerGetCapabilities
+I0125 12:01:35.508773       1 connection.go:271] GRPC request: {}
+I0125 12:01:35.514997       1 connection.go:273] GRPC response: {"capabilities":[{"Type":{"Rpc":{"type":1}}},{"Type":{"Rpc":{"type":2}}},{"Type":{"Rpc":{"type":5}}},{"Type":{"Rpc":{"type":6}}}]}
+I0125 12:01:35.520775       1 connection.go:274] GRPC error: <nil>
+I0125 12:01:35.520794       1 main.go:159] Start NewCSISnapshotController with snapshotter [csi-rbdplugin] kubeconfig [] connectionTimeout [15s] csiAddress [/csi/csi.sock] createSnapshotContentRetryCount [842350744704] createSnapshotContentInterval [10s] resyncPeriod [1m0s] snapshotNamePrefix [snapshot] snapshotNameUUIDLength [842350744744]
+I0125 12:01:35.523572       1 snapshot_controller_base.go:139] Starting CSI snapshotter
+I0125 12:01:35.623723       1 snapshot_controller_base.go:483] controller initialized
+I0125 12:01:45.534065       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:01:45.534123       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:01:45.534132       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:01:45.534140       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:01:45.534162       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:01:45.534178       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:01:45.534186       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:01:45.534194       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:01:45.534228       1 util.go:107] storeObjectUpdate: adding snapshot "default/rbd-pvc-snapshot", version 29553
+I0125 12:01:45.534241       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:01:45.534250       1 snapshot_controller.go:191] syncSnapshot: Add Finalizer for VolumeSnapshot[default/rbd-pvc-snapshot]
+I0125 12:01:45.575448       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29553
+I0125 12:01:45.575524       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:01:45.575527       1 snapshot_controller.go:1035] Added protection finalizer to volume snapshot default/rbd-pvc-snapshot
+I0125 12:01:45.575562       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:01:45.575569       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:01:45.575578       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:01:45.575585       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:01:45.575594       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:01:45.575602       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:01:45.575610       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:01:45.575620       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29554
+I0125 12:01:45.575631       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:01:45.575646       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:01:45.575660       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:01:45.575676       1 snapshot_controller.go:357] createSnapshot[default/rbd-pvc-snapshot]: started
+I0125 12:01:45.575685       1 snapshot_controller.go:332] scheduleOperation[create-default/rbd-pvc-snapshot[fc84af67-2098-11e9-a1e9-52540088830b]]
+I0125 12:01:45.575722       1 snapshot_controller.go:594] createSnapshot: Creating snapshot default/rbd-pvc-snapshot through the plugin ...
+I0125 12:01:45.575747       1 snapshot_controller.go:521] getCreateSnapshotInput [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:01:45.575753       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:01:45.590607       1 snapshot_controller.go:847] getVolumeFromVolumeSnapshot: snapshot [rbd-pvc-snapshot] PV name [pvc-aa394dc4-207e-11e9-a1e9-52540088830b]
+W0125 12:01:45.590631       1 util.go:172] "csiSnapshotterSecretName" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-name" instead
+W0125 12:01:45.590640       1 util.go:177] "csiSnapshotterSecretNamespace" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-namespace" instead
+I0125 12:01:45.590663       1 util.go:252] GetSecretReference namespaceTemplate default, namespaceParams: map[volumesnapshotcontent.name:snapcontent-fc84af67-2098-11e9-a1e9-52540088830b volumesnapshot.namespace:default], resolved default
+I0125 12:01:45.590780       1 util.go:285] GetSecretReference validated Secret: &SecretReference{Name:csi-rbd-secret,Namespace:default,}
+I0125 12:01:45.602496       1 connection.go:195] CSI CreateSnapshot: snapshot-fc84af67-2098-11e9-a1e9-52540088830b
+I0125 12:01:45.602522       1 connection.go:270] GRPC call: /csi.v1.Identity/GetPluginInfo
+I0125 12:01:45.602530       1 connection.go:271] GRPC request: {}
+I0125 12:01:45.607433       1 connection.go:273] GRPC response: {"name":"csi-rbdplugin","vendor_version":"1.0.0"}
+I0125 12:01:45.608156       1 connection.go:274] GRPC error: <nil>
+I0125 12:01:45.608167       1 connection.go:270] GRPC call: /csi.v1.Controller/CreateSnapshot
+I0125 12:01:45.608175       1 connection.go:271] GRPC request: {"name":"snapshot-fc84af67-2098-11e9-a1e9-52540088830b","parameters":{"csiSnapshotterSecretName":"csi-rbd-secret","csiSnapshotterSecretNamespace":"default","monitors":"rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789.","pool":"rbd"},"secrets":"***stripped***","source_volume_id":"csi-rbd-vol-aa48be19-207e-11e9-98c8-5254005d68f0"}
+I0125 12:01:45.683172       1 connection.go:273] GRPC response: {}
+I0125 12:01:45.683945       1 connection.go:274] GRPC error: rpc error: code = Unknown desc = failed to create snapshot, command output: 2019-01-25 12:01:45.634235 7f3767e26d40 -1 did not load config file, using default settings.
+2019-01-25 12:01:45.641634 7f3767e26d40 -1 Errors while parsing config file!
+2019-01-25 12:01:45.641640 7f3767e26d40 -1 parse_file: cannot open /etc/ceph/ceph.conf: (2) No such file or directory
+2019-01-25 12:01:45.641641 7f3767e26d40 -1 parse_file: cannot open ~/.ceph/ceph.conf: (2) No such file or directory
+2019-01-25 12:01:45.641641 7f3767e26d40 -1 parse_file: cannot open ceph.conf: (2) No such file or directory
+2019-01-25 12:01:45.643144 7f3767e26d40 -1 Errors while parsing config file!
+2019-01-25 12:01:45.643149 7f3767e26d40 -1 parse_file: cannot open /etc/ceph/ceph.conf: (2) No such file or directory
+2019-01-25 12:01:45.643149 7f3767e26d40 -1 parse_file: cannot open ~/.ceph/ceph.conf: (2) No such file or directory
+2019-01-25 12:01:45.643150 7f3767e26d40 -1 parse_file: cannot open ceph.conf: (2) No such file or directory
+server name not found: rook-ceph-mon-a.rook-ceph.svc.cluster.local (Servname not supported for ai_socktype)
+unable to parse addrs in 'rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789.'
+rbd: couldn't connect to the cluster!
+: exit status 22
+I0125 12:01:45.684044       1 snapshot_controller.go:405] updateSnapshotStatusWithEvent[default/rbd-pvc-snapshot]
+I0125 12:01:45.711650       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+E0125 12:01:45.712356       1 snapshot_controller.go:363] createSnapshot [create-default/rbd-pvc-snapshot[fc84af67-2098-11e9-a1e9-52540088830b]]: error occurred in createSnapshotOperation: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "rpc error: code = Unknown desc = failed to create snapshot, command output: 2019-01-25 12:01:45.634235 7f3767e26d40 -1 did not load config file, using default settings.\n2019-01-25 12:01:45.641634 7f3767e26d40 -1 Errors while parsing config file!\n2019-01-25 12:01:45.641640 7f3767e26d40 -1 parse_file: cannot open /etc/ceph/ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.641641 7f3767e26d40 -1 parse_file: cannot open ~/.ceph/ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.641641 7f3767e26d40 -1 parse_file: cannot open ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.643144 7f3767e26d40 -1 Errors while parsing config file!\n2019-01-25 12:01:45.643149 7f3767e26d40 -1 parse_file: cannot open /etc/ceph/ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.643149 7f3767e26d40 -1 parse_file: cannot open ~/.ceph/ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.643150 7f3767e26d40 -1 parse_file: cannot open ceph.conf: (2) No such file or directory\nserver name not found: rook-ceph-mon-a.rook-ceph.svc.cluster.local (Servname not supported for ai_socktype)\nunable to parse addrs in 'rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789.'\nrbd: couldn't connect to the cluster!\n: exit status 22"
+E0125 12:01:45.712481       1 goroutinemap.go:150] Operation for "create-default/rbd-pvc-snapshot[fc84af67-2098-11e9-a1e9-52540088830b]" failed. No retries permitted until 2019-01-25 12:01:46.212371174 +0000 UTC m=+10.786682384 (durationBeforeRetry 500ms). Error: "failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: \"rpc error: code = Unknown desc = failed to create snapshot, command output: 2019-01-25 12:01:45.634235 7f3767e26d40 -1 did not load config file, using default settings.\\n2019-01-25 12:01:45.641634 7f3767e26d40 -1 Errors while parsing config file!\\n2019-01-25 12:01:45.641640 7f3767e26d40 -1 parse_file: cannot open /etc/ceph/ceph.conf: (2) No such file or directory\\n2019-01-25 12:01:45.641641 7f3767e26d40 -1 parse_file: cannot open ~/.ceph/ceph.conf: (2) No such file or directory\\n2019-01-25 12:01:45.641641 7f3767e26d40 -1 parse_file: cannot open ceph.conf: (2) No such file or directory\\n2019-01-25 12:01:45.643144 7f3767e26d40 -1 Errors while parsing config file!\\n2019-01-25 12:01:45.643149 7f3767e26d40 -1 parse_file: cannot open /etc/ceph/ceph.conf: (2) No such file or directory\\n2019-01-25 12:01:45.643149 7f3767e26d40 -1 parse_file: cannot open ~/.ceph/ceph.conf: (2) No such file or directory\\n2019-01-25 12:01:45.643150 7f3767e26d40 -1 parse_file: cannot open ceph.conf: (2) No such file or directory\\nserver name not found: rook-ceph-mon-a.rook-ceph.svc.cluster.local (Servname not supported for ai_socktype)\\nunable to parse addrs in 'rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789.'\\nrbd: couldn't connect to the cluster!\\n: exit status 22\""
+I0125 12:01:45.712162       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:01:45.713186       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:01:45.713198       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:01:45.713209       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:01:45.713217       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:01:45.713226       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:01:45.713234       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:01:45.713244       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:01:45.713283       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:01:45.713301       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:01:45.713310       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:01:45.713341       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:01:45.713436       1 event.go:221] Event(v1.ObjectReference{Kind:"VolumeSnapshot", Namespace:"default", Name:"rbd-pvc-snapshot", UID:"fc84af67-2098-11e9-a1e9-52540088830b", APIVersion:"snapshot.storage.k8s.io/v1alpha1", ResourceVersion:"29555", FieldPath:""}): type: 'Warning' reason: 'SnapshotCreationFailed' Failed to create snapshot: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "rpc error: code = Unknown desc = failed to create snapshot, command output: 2019-01-25 12:01:45.634235 7f3767e26d40 -1 did not load config file, using default settings.\n2019-01-25 12:01:45.641634 7f3767e26d40 -1 Errors while parsing config file!\n2019-01-25 12:01:45.641640 7f3767e26d40 -1 parse_file: cannot open /etc/ceph/ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.641641 7f3767e26d40 -1 parse_file: cannot open ~/.ceph/ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.641641 7f3767e26d40 -1 parse_file: cannot open ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.643144 7f3767e26d40 -1 Errors while parsing config file!\n2019-01-25 12:01:45.643149 7f3767e26d40 -1 parse_file: cannot open /etc/ceph/ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.643149 7f3767e26d40 -1 parse_file: cannot open ~/.ceph/ceph.conf: (2) No such file or directory\n2019-01-25 12:01:45.643150 7f3767e26d40 -1 parse_file: cannot open ceph.conf: (2) No such file or directory\nserver name not found: rook-ceph-mon-a.rook-ceph.svc.cluster.local (Servname not supported for ai_socktype)\nunable to parse addrs in 'rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789.'\nrbd: couldn't connect to the cluster!\n: exit status 22"
+I0125 12:02:35.596822       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:02:35.597615       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:02:35.597640       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:02:35.597670       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:02:35.597693       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:02:35.597721       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:02:35.597750       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:02:35.597781       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:02:35.597874       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:02:35.597941       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:02:35.597982       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:02:35.598013       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:03:35.602171       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:03:35.604532       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:03:35.604589       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:03:35.604621       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:03:35.604641       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:03:35.604665       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:03:35.604699       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:03:35.604726       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:03:35.604843       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:03:35.604893       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:03:35.604920       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:03:35.604944       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:04:35.602285       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:04:35.602413       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:04:35.602423       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:04:35.602436       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:04:35.602467       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:04:35.602473       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:04:35.602480       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:04:35.602487       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:04:35.602515       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:04:35.602527       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:04:35.602534       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:04:35.602544       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:05:35.602424       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:05:35.602522       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:05:35.602530       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:05:35.602542       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:05:35.602552       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:05:35.602561       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:05:35.602567       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:05:35.602573       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:05:35.602607       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:05:35.602616       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:05:35.602622       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:05:35.602627       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:06:35.607576       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:06:35.607745       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:06:35.607779       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:06:35.607815       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:06:35.607840       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:06:35.607868       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:06:35.607895       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:06:35.607924       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:06:35.608024       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:06:35.608064       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:06:35.608089       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:06:35.608116       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:07:35.608237       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:07:35.608710       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:07:35.608760       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:07:35.608805       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:07:35.608845       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:07:35.608897       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:07:35.608941       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:07:35.609008       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:07:35.609142       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:07:35.609227       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:07:35.609261       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:07:35.609298       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:08:35.608556       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:08:35.608656       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:08:35.608685       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:08:35.608705       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:08:35.608744       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:08:35.608786       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:08:35.608817       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:08:35.608841       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:08:35.608979       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:08:35.609007       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:08:35.609022       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:08:35.609036       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:09:35.609153       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:09:35.609327       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:09:35.609379       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:09:35.609521       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:09:35.609611       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:09:35.609654       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:09:35.609694       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:09:35.609729       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:09:35.609858       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:09:35.609909       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:09:35.609987       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:09:35.610022       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:10:35.609984       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:10:35.610047       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:10:35.610064       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:10:35.610080       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:10:35.610092       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:10:35.610118       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:10:35.610132       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:10:35.610146       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:10:35.610164       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:10:35.610187       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:10:35.610200       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:10:35.610215       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:11:35.611325       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:11:35.611980       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:11:35.612034       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:11:35.612078       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:11:35.612205       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:11:35.612241       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:11:35.612275       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:11:35.612307       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:11:35.612365       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:11:35.612415       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:11:35.612549       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:11:35.612592       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:12:35.614963       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:12:35.615052       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:12:35.615063       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:12:35.615094       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:12:35.615110       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:12:35.615124       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:12:35.615143       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:12:35.615158       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:12:35.615179       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:12:35.615197       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:12:35.615220       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:12:35.615233       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:13:35.616010       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:13:35.616987       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:13:35.617030       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:13:35.617080       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:13:35.617121       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:13:35.617173       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:13:35.617236       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:13:35.617278       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:13:35.617377       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:13:35.617510       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:13:35.617580       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:13:35.617618       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:14:35.616157       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:14:35.616209       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:14:35.616222       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:14:35.616239       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:14:35.616248       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:14:35.616258       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:14:35.616266       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:14:35.616291       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:14:35.616306       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 29555
+I0125 12:14:35.616319       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:14:35.616327       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:14:35.616338       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:15:03.064057       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:15:03.064092       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:15:03.064103       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:15:03.064116       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:03.064122       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+E0125 12:15:03.064144       1 snapshot_controller.go:882] failed to retrieve snapshot class csi-rbdplugin-snapclass from the informer: "volumesnapshotclass.snapshot.storage.k8s.io \"csi-rbdplugin-snapclass\" not found"
+E0125 12:15:03.064179       1 snapshot_controller_base.go:350] checkAndUpdateSnapshotClass failed to getSnapshotClass failed to retrieve snapshot class csi-rbdplugin-snapclass from the informer: "volumesnapshotclass.snapshot.storage.k8s.io \"csi-rbdplugin-snapclass\" not found"
+I0125 12:15:03.064201       1 snapshot_controller.go:405] updateSnapshotStatusWithEvent[default/rbd-pvc-snapshot]
+I0125 12:15:03.087874       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:15:03.088099       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30736
+I0125 12:15:03.088131       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:15:03.088136       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:15:03.088141       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:03.088152       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+E0125 12:15:03.088159       1 snapshot_controller.go:882] failed to retrieve snapshot class csi-rbdplugin-snapclass from the informer: "volumesnapshotclass.snapshot.storage.k8s.io \"csi-rbdplugin-snapclass\" not found"
+E0125 12:15:03.088177       1 snapshot_controller_base.go:350] checkAndUpdateSnapshotClass failed to getSnapshotClass failed to retrieve snapshot class csi-rbdplugin-snapclass from the informer: "volumesnapshotclass.snapshot.storage.k8s.io \"csi-rbdplugin-snapclass\" not found"
+I0125 12:15:03.088187       1 snapshot_controller.go:405] updateSnapshotStatusWithEvent[default/rbd-pvc-snapshot]
+I0125 12:15:03.088192       1 snapshot_controller.go:408] updateSnapshotStatusWithEvent[rbd-pvc-snapshot]: the same error &VolumeError{Time:2019-01-25 12:15:03 +0000 UTC,Message:Failed to get snapshot class with error failed to retrieve snapshot class csi-rbdplugin-snapclass from the informer: "volumesnapshotclass.snapshot.storage.k8s.io \"csi-rbdplugin-snapclass\" not found",} is already set
+I0125 12:15:03.088638       1 event.go:221] Event(v1.ObjectReference{Kind:"VolumeSnapshot", Namespace:"default", Name:"rbd-pvc-snapshot", UID:"fc84af67-2098-11e9-a1e9-52540088830b", APIVersion:"snapshot.storage.k8s.io/v1alpha1", ResourceVersion:"30736", FieldPath:""}): type: 'Warning' reason: 'GetSnapshotClassFailed' Failed to get snapshot class with error failed to retrieve snapshot class csi-rbdplugin-snapclass from the informer: "volumesnapshotclass.snapshot.storage.k8s.io \"csi-rbdplugin-snapclass\" not found"
+I0125 12:15:30.299427       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:15:30.299543       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:15:30.299571       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:15:30.299585       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:30.299594       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:30.299602       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:15:30.299613       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:15:30.299619       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:15:30.299628       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30779
+I0125 12:15:30.299635       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:15:30.320357       1 snapshot_controller.go:489] isVolumeBeingCreatedFromSnapshot: no volume is being created from snapshot default/rbd-pvc-snapshot
+I0125 12:15:30.320384       1 snapshot_controller.go:184] syncSnapshot: Remove Finalizer for VolumeSnapshot[default/rbd-pvc-snapshot]
+I0125 12:15:30.338773       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:15:30.338964       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30779
+I0125 12:15:30.338977       1 snapshot_controller.go:1054] Removed protection finalizer from volume snapshot default/rbd-pvc-snapshot
+I0125 12:15:30.338987       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:15:30.338992       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:15:30.339003       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:30.339008       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:30.339015       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:15:30.339026       1 snapshot_controller_base.go:424] snapshot "default/rbd-pvc-snapshot" deleted
+I0125 12:15:30.339033       1 snapshot_controller_base.go:428] deleteSnapshot["default/rbd-pvc-snapshot"]: content not bound
+I0125 12:15:36.729997       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:15:36.730041       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:15:36.730049       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:15:36.730057       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:36.730066       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:36.730074       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:15:36.730080       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:15:36.730088       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:15:36.730099       1 util.go:107] storeObjectUpdate: adding snapshot "default/rbd-pvc-snapshot", version 30791
+I0125 12:15:36.730115       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:15:36.730121       1 snapshot_controller.go:191] syncSnapshot: Add Finalizer for VolumeSnapshot[default/rbd-pvc-snapshot]
+I0125 12:15:36.755738       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:15:36.756939       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30791
+I0125 12:15:36.756976       1 snapshot_controller.go:1035] Added protection finalizer to volume snapshot default/rbd-pvc-snapshot
+I0125 12:15:36.756994       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:15:36.757001       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:15:36.757012       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:36.757021       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:36.757031       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:15:36.757042       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:15:36.757052       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:15:36.757063       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30792
+I0125 12:15:36.757076       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:15:36.757084       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:15:36.757096       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:15:36.757104       1 snapshot_controller.go:357] createSnapshot[default/rbd-pvc-snapshot]: started
+I0125 12:15:36.757114       1 snapshot_controller.go:332] scheduleOperation[create-default/rbd-pvc-snapshot[ebf2a476-209a-11e9-a1e9-52540088830b]]
+I0125 12:15:36.757156       1 snapshot_controller.go:594] createSnapshot: Creating snapshot default/rbd-pvc-snapshot through the plugin ...
+I0125 12:15:36.757177       1 snapshot_controller.go:521] getCreateSnapshotInput [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:36.757188       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:36.785715       1 snapshot_controller.go:847] getVolumeFromVolumeSnapshot: snapshot [rbd-pvc-snapshot] PV name [pvc-aa394dc4-207e-11e9-a1e9-52540088830b]
+W0125 12:15:36.785779       1 util.go:172] "csiSnapshotterSecretName" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-name" instead
+W0125 12:15:36.785800       1 util.go:177] "csiSnapshotterSecretNamespace" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-namespace" instead
+I0125 12:15:36.785819       1 util.go:252] GetSecretReference namespaceTemplate default, namespaceParams: map[volumesnapshotcontent.name:snapcontent-ebf2a476-209a-11e9-a1e9-52540088830b volumesnapshot.namespace:default], resolved default
+I0125 12:15:36.785887       1 util.go:285] GetSecretReference validated Secret: &SecretReference{Name:csi-rbd-secret,Namespace:default,}
+I0125 12:15:36.802492       1 connection.go:195] CSI CreateSnapshot: snapshot-ebf2a476-209a-11e9-a1e9-52540088830b
+I0125 12:15:36.802536       1 connection.go:270] GRPC call: /csi.v1.Identity/GetPluginInfo
+I0125 12:15:36.802547       1 connection.go:271] GRPC request: {}
+I0125 12:15:36.809880       1 connection.go:273] GRPC response: {"name":"csi-rbdplugin","vendor_version":"1.0.0"}
+I0125 12:15:36.810623       1 connection.go:274] GRPC error: <nil>
+I0125 12:15:36.810635       1 connection.go:270] GRPC call: /csi.v1.Controller/CreateSnapshot
+I0125 12:15:36.810642       1 connection.go:271] GRPC request: {"name":"snapshot-ebf2a476-209a-11e9-a1e9-52540088830b","parameters":{"csiSnapshotterSecretName":"csi-rbd-secret","csiSnapshotterSecretNamespace":"default","monitors":"rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789","pool":"rbd"},"secrets":"***stripped***","source_volume_id":"csi-rbd-vol-aa48be19-207e-11e9-98c8-5254005d68f0"}
+I0125 12:15:38.121888       1 connection.go:273] GRPC response: {"snapshot":{"creation_time":{"seconds":1548418538083165400},"ready_to_use":true,"size_bytes":1073741824,"snapshot_id":"csi-rbd-pvc-aa394dc4-207e-11e9-a1e9-52540088830b-snap-ec0249b2-209a-11e9-98c8-5254005d68f0","source_volume_id":"csi-rbd-vol-aa48be19-207e-11e9-98c8-5254005d68f0"}}
+I0125 12:15:38.123596       1 connection.go:274] GRPC error: <nil>
+I0125 12:15:38.123609       1 connection.go:219] CSI CreateSnapshot: snapshot-ebf2a476-209a-11e9-a1e9-52540088830b driver name [csi-rbdplugin] snapshot ID [csi-rbd-pvc-aa394dc4-207e-11e9-a1e9-52540088830b-snap-ec0249b2-209a-11e9-98c8-5254005d68f0] time stamp [&{1548418538083165394 0 {} [] 0}] size [1073741824] readyToUse [true]
+I0125 12:15:38.123748       1 snapshot_controller.go:405] updateSnapshotStatusWithEvent[default/rbd-pvc-snapshot]
+I0125 12:15:38.137685       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:15:38.137720       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:15:38.137728       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:15:38.137738       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:38.137745       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:15:38.137754       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:15:38.137769       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:15:38.137779       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:15:38.137800       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30794
+I0125 12:15:38.137812       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:15:38.137820       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:15:38.137830       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:15:38.138113       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30794
+E0125 12:15:38.138152       1 snapshot_controller.go:363] createSnapshot [create-default/rbd-pvc-snapshot[ebf2a476-209a-11e9-a1e9-52540088830b]]: error occurred in createSnapshotOperation: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "timestamp: seconds:1548418538083165394  after 10000-01-01"
+E0125 12:15:38.138203       1 goroutinemap.go:150] Operation for "create-default/rbd-pvc-snapshot[ebf2a476-209a-11e9-a1e9-52540088830b]" failed. No retries permitted until 2019-01-25 12:15:38.638170352 +0000 UTC m=+843.212481568 (durationBeforeRetry 500ms). Error: "failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: \"timestamp: seconds:1548418538083165394  after 10000-01-01\""
+I0125 12:15:38.138249       1 event.go:221] Event(v1.ObjectReference{Kind:"VolumeSnapshot", Namespace:"default", Name:"rbd-pvc-snapshot", UID:"ebf2a476-209a-11e9-a1e9-52540088830b", APIVersion:"snapshot.storage.k8s.io/v1alpha1", ResourceVersion:"30794", FieldPath:""}): type: 'Warning' reason: 'SnapshotCreationFailed' Failed to create snapshot: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "timestamp: seconds:1548418538083165394  after 10000-01-01"
+I0125 12:16:07.350950       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:16:07.350998       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:16:07.351009       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:16:07.351026       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:07.351034       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:07.351042       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:07.351050       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:16:07.351059       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:16:07.351073       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30841
+I0125 12:16:07.351084       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:16:07.369465       1 snapshot_controller.go:489] isVolumeBeingCreatedFromSnapshot: no volume is being created from snapshot default/rbd-pvc-snapshot
+I0125 12:16:07.369493       1 snapshot_controller.go:184] syncSnapshot: Remove Finalizer for VolumeSnapshot[default/rbd-pvc-snapshot]
+I0125 12:16:07.398085       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30841
+I0125 12:16:07.398118       1 snapshot_controller.go:1054] Removed protection finalizer from volume snapshot default/rbd-pvc-snapshot
+I0125 12:16:07.398267       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:16:07.398287       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:16:07.398295       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:16:07.398311       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:07.398320       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:07.398330       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:07.398849       1 snapshot_controller_base.go:424] snapshot "default/rbd-pvc-snapshot" deleted
+I0125 12:16:07.398871       1 snapshot_controller_base.go:428] deleteSnapshot["default/rbd-pvc-snapshot"]: content not bound
+I0125 12:16:14.502015       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:16:14.502072       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:16:14.502082       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:16:14.502098       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:14.502118       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:14.502130       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:14.502152       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:16:14.502164       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:16:14.502188       1 util.go:107] storeObjectUpdate: adding snapshot "default/rbd-pvc-snapshot", version 30853
+I0125 12:16:14.502206       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:16:14.502227       1 snapshot_controller.go:191] syncSnapshot: Add Finalizer for VolumeSnapshot[default/rbd-pvc-snapshot]
+I0125 12:16:14.522862       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:16:14.524411       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30853
+I0125 12:16:14.524520       1 snapshot_controller.go:1035] Added protection finalizer to volume snapshot default/rbd-pvc-snapshot
+I0125 12:16:14.524541       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:16:14.524550       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:16:14.524562       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:14.524589       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:14.524604       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:14.524615       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:16:14.524642       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:16:14.524659       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30854
+I0125 12:16:14.524684       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:16:14.524695       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:16:14.524713       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:16:14.524722       1 snapshot_controller.go:357] createSnapshot[default/rbd-pvc-snapshot]: started
+I0125 12:16:14.524749       1 snapshot_controller.go:332] scheduleOperation[create-default/rbd-pvc-snapshot[0277e21b-209b-11e9-a1e9-52540088830b]]
+I0125 12:16:14.524784       1 snapshot_controller.go:594] createSnapshot: Creating snapshot default/rbd-pvc-snapshot through the plugin ...
+I0125 12:16:14.524803       1 snapshot_controller.go:521] getCreateSnapshotInput [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:14.524811       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:14.545038       1 snapshot_controller.go:847] getVolumeFromVolumeSnapshot: snapshot [rbd-pvc-snapshot] PV name [pvc-aa394dc4-207e-11e9-a1e9-52540088830b]
+W0125 12:16:14.545091       1 util.go:172] "csiSnapshotterSecretName" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-name" instead
+W0125 12:16:14.545108       1 util.go:177] "csiSnapshotterSecretNamespace" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-namespace" instead
+I0125 12:16:14.545136       1 util.go:252] GetSecretReference namespaceTemplate default, namespaceParams: map[volumesnapshotcontent.name:snapcontent-0277e21b-209b-11e9-a1e9-52540088830b volumesnapshot.namespace:default], resolved default
+I0125 12:16:14.545179       1 util.go:285] GetSecretReference validated Secret: &SecretReference{Name:csi-rbd-secret,Namespace:default,}
+I0125 12:16:14.560366       1 connection.go:195] CSI CreateSnapshot: snapshot-0277e21b-209b-11e9-a1e9-52540088830b
+I0125 12:16:14.560396       1 connection.go:270] GRPC call: /csi.v1.Identity/GetPluginInfo
+I0125 12:16:14.560404       1 connection.go:271] GRPC request: {}
+I0125 12:16:14.565584       1 connection.go:273] GRPC response: {"name":"csi-rbdplugin","vendor_version":"1.0.0"}
+I0125 12:16:14.566369       1 connection.go:274] GRPC error: <nil>
+I0125 12:16:14.566382       1 connection.go:270] GRPC call: /csi.v1.Controller/CreateSnapshot
+I0125 12:16:14.566390       1 connection.go:271] GRPC request: {"name":"snapshot-0277e21b-209b-11e9-a1e9-52540088830b","parameters":{"csiSnapshotterSecretName":"csi-rbd-secret","csiSnapshotterSecretNamespace":"default","monitors":"rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789","pool":"rbd"},"secrets":"***stripped***","source_volume_id":"csi-rbd-vol-aa48be19-207e-11e9-98c8-5254005d68f0"}
+I0125 12:16:15.017372       1 connection.go:273] GRPC response: {"snapshot":{"creation_time":{"seconds":1548418574983674000},"ready_to_use":true,"size_bytes":1073741824,"snapshot_id":"csi-rbd-pvc-aa394dc4-207e-11e9-a1e9-52540088830b-snap-028380c1-209b-11e9-98c8-5254005d68f0","source_volume_id":"csi-rbd-vol-aa48be19-207e-11e9-98c8-5254005d68f0"}}
+I0125 12:16:15.018255       1 connection.go:274] GRPC error: <nil>
+I0125 12:16:15.018267       1 connection.go:219] CSI CreateSnapshot: snapshot-0277e21b-209b-11e9-a1e9-52540088830b driver name [csi-rbdplugin] snapshot ID [csi-rbd-pvc-aa394dc4-207e-11e9-a1e9-52540088830b-snap-028380c1-209b-11e9-98c8-5254005d68f0] time stamp [&{1548418574983673986 0 {} [] 0}] size [1073741824] readyToUse [true]
+I0125 12:16:15.018314       1 snapshot_controller.go:405] updateSnapshotStatusWithEvent[default/rbd-pvc-snapshot]
+I0125 12:16:15.034073       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:16:15.034109       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:16:15.034119       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:16:15.034140       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:15.034148       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:15.034160       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:15.034171       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:16:15.034183       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:16:15.034206       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30856
+I0125 12:16:15.034217       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:16:15.034225       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:16:15.034233       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:16:15.039062       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30856
+E0125 12:16:15.039107       1 snapshot_controller.go:363] createSnapshot [create-default/rbd-pvc-snapshot[0277e21b-209b-11e9-a1e9-52540088830b]]: error occurred in createSnapshotOperation: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "timestamp: seconds:1548418574983673986  after 10000-01-01"
+E0125 12:16:15.039147       1 goroutinemap.go:150] Operation for "create-default/rbd-pvc-snapshot[0277e21b-209b-11e9-a1e9-52540088830b]" failed. No retries permitted until 2019-01-25 12:16:15.539122553 +0000 UTC m=+880.113433757 (durationBeforeRetry 500ms). Error: "failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: \"timestamp: seconds:1548418574983673986  after 10000-01-01\""
+I0125 12:16:15.039522       1 event.go:221] Event(v1.ObjectReference{Kind:"VolumeSnapshot", Namespace:"default", Name:"rbd-pvc-snapshot", UID:"0277e21b-209b-11e9-a1e9-52540088830b", APIVersion:"snapshot.storage.k8s.io/v1alpha1", ResourceVersion:"30856", FieldPath:""}): type: 'Warning' reason: 'SnapshotCreationFailed' Failed to create snapshot: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "timestamp: seconds:1548418574983673986  after 10000-01-01"
+I0125 12:16:35.622423       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:16:35.622656       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:16:35.622695       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:16:35.622729       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:35.622752       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:35.622779       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:35.622805       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:16:35.622835       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:16:35.622874       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30856
+I0125 12:16:35.622915       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:16:35.622941       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:16:35.622970       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:16:37.416368       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:16:37.416404       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:16:37.416415       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:16:37.416424       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:37.416431       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:37.416643       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:37.416666       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:16:37.416676       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:16:37.416688       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30891
+I0125 12:16:37.416699       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:16:37.433773       1 snapshot_controller.go:489] isVolumeBeingCreatedFromSnapshot: no volume is being created from snapshot default/rbd-pvc-snapshot
+I0125 12:16:37.433794       1 snapshot_controller.go:184] syncSnapshot: Remove Finalizer for VolumeSnapshot[default/rbd-pvc-snapshot]
+I0125 12:16:37.465041       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:16:37.470003       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 30891
+I0125 12:16:37.470038       1 snapshot_controller.go:1054] Removed protection finalizer from volume snapshot default/rbd-pvc-snapshot
+I0125 12:16:37.470053       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:16:37.470060       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:16:37.470074       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:37.470086       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:37.470095       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:37.470104       1 snapshot_controller_base.go:424] snapshot "default/rbd-pvc-snapshot" deleted
+I0125 12:16:37.470111       1 snapshot_controller_base.go:428] deleteSnapshot["default/rbd-pvc-snapshot"]: content not bound
+I0125 12:16:50.212763       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:16:50.212837       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:16:50.212848       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:16:50.212856       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:50.212862       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:50.212870       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:50.212878       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:16:50.212886       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:16:50.212896       1 util.go:107] storeObjectUpdate: adding snapshot "default/rbd-pvc-snapshot1", version 30912
+I0125 12:16:50.212907       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:16:50.212913       1 snapshot_controller.go:191] syncSnapshot: Add Finalizer for VolumeSnapshot[default/rbd-pvc-snapshot1]
+I0125 12:16:50.236401       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:16:50.236755       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30912
+I0125 12:16:50.236773       1 snapshot_controller.go:1035] Added protection finalizer to volume snapshot default/rbd-pvc-snapshot1
+I0125 12:16:50.236784       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:16:50.236790       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:16:50.236797       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:50.236803       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:50.236810       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:50.236818       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:16:50.236825       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:16:50.236833       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30913
+I0125 12:16:50.236842       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:16:50.236849       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:16:50.236856       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:16:50.236862       1 snapshot_controller.go:357] createSnapshot[default/rbd-pvc-snapshot1]: started
+I0125 12:16:50.236868       1 snapshot_controller.go:332] scheduleOperation[create-default/rbd-pvc-snapshot1[17c03420-209b-11e9-a1e9-52540088830b]]
+I0125 12:16:50.236891       1 snapshot_controller.go:594] createSnapshot: Creating snapshot default/rbd-pvc-snapshot1 through the plugin ...
+I0125 12:16:50.236897       1 snapshot_controller.go:521] getCreateSnapshotInput [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:50.236902       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:50.264876       1 snapshot_controller.go:847] getVolumeFromVolumeSnapshot: snapshot [rbd-pvc-snapshot1] PV name [pvc-aa394dc4-207e-11e9-a1e9-52540088830b]
+W0125 12:16:50.265130       1 util.go:172] "csiSnapshotterSecretName" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-name" instead
+W0125 12:16:50.265157       1 util.go:177] "csiSnapshotterSecretNamespace" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-namespace" instead
+I0125 12:16:50.265193       1 util.go:252] GetSecretReference namespaceTemplate default, namespaceParams: map[volumesnapshot.namespace:default volumesnapshotcontent.name:snapcontent-17c03420-209b-11e9-a1e9-52540088830b], resolved default
+I0125 12:16:50.265231       1 util.go:285] GetSecretReference validated Secret: &SecretReference{Name:csi-rbd-secret,Namespace:default,}
+I0125 12:16:50.276827       1 connection.go:195] CSI CreateSnapshot: snapshot-17c03420-209b-11e9-a1e9-52540088830b
+I0125 12:16:50.276852       1 connection.go:270] GRPC call: /csi.v1.Identity/GetPluginInfo
+I0125 12:16:50.276861       1 connection.go:271] GRPC request: {}
+I0125 12:16:50.289278       1 connection.go:273] GRPC response: {"name":"csi-rbdplugin","vendor_version":"1.0.0"}
+I0125 12:16:50.289919       1 connection.go:274] GRPC error: <nil>
+I0125 12:16:50.289931       1 connection.go:270] GRPC call: /csi.v1.Controller/CreateSnapshot
+I0125 12:16:50.289939       1 connection.go:271] GRPC request: {"name":"snapshot-17c03420-209b-11e9-a1e9-52540088830b","parameters":{"csiSnapshotterSecretName":"csi-rbd-secret","csiSnapshotterSecretNamespace":"default","monitors":"rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789","pool":"rbd"},"secrets":"***stripped***","source_volume_id":"csi-rbd-vol-aa48be19-207e-11e9-98c8-5254005d68f0"}
+I0125 12:16:50.638136       1 connection.go:273] GRPC response: {"snapshot":{"creation_time":{"seconds":1548418610614360000},"ready_to_use":true,"size_bytes":1073741824,"snapshot_id":"csi-rbd-pvc-aa394dc4-207e-11e9-a1e9-52540088830b-snap-17cefbf8-209b-11e9-98c8-5254005d68f0","source_volume_id":"csi-rbd-vol-aa48be19-207e-11e9-98c8-5254005d68f0"}}
+I0125 12:16:50.642300       1 connection.go:274] GRPC error: <nil>
+I0125 12:16:50.642313       1 connection.go:219] CSI CreateSnapshot: snapshot-17c03420-209b-11e9-a1e9-52540088830b driver name [csi-rbdplugin] snapshot ID [csi-rbd-pvc-aa394dc4-207e-11e9-a1e9-52540088830b-snap-17cefbf8-209b-11e9-98c8-5254005d68f0] time stamp [&{1548418610614359937 0 {} [] 0}] size [1073741824] readyToUse [true]
+I0125 12:16:50.642392       1 snapshot_controller.go:405] updateSnapshotStatusWithEvent[default/rbd-pvc-snapshot1]
+I0125 12:16:50.650701       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:16:50.650731       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:16:50.650744       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:16:50.650758       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:50.650769       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:16:50.650781       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:16:50.650794       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:16:50.650807       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:16:50.650822       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:16:50.650837       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:16:50.650846       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:16:50.650860       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:16:50.656666       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+E0125 12:16:50.656710       1 snapshot_controller.go:363] createSnapshot [create-default/rbd-pvc-snapshot1[17c03420-209b-11e9-a1e9-52540088830b]]: error occurred in createSnapshotOperation: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "timestamp: seconds:1548418610614359937  after 10000-01-01"
+E0125 12:16:50.656740       1 goroutinemap.go:150] Operation for "create-default/rbd-pvc-snapshot1[17c03420-209b-11e9-a1e9-52540088830b]" failed. No retries permitted until 2019-01-25 12:16:51.156719098 +0000 UTC m=+915.731030285 (durationBeforeRetry 500ms). Error: "failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: \"timestamp: seconds:1548418610614359937  after 10000-01-01\""
+I0125 12:16:50.657465       1 event.go:221] Event(v1.ObjectReference{Kind:"VolumeSnapshot", Namespace:"default", Name:"rbd-pvc-snapshot1", UID:"17c03420-209b-11e9-a1e9-52540088830b", APIVersion:"snapshot.storage.k8s.io/v1alpha1", ResourceVersion:"30918", FieldPath:""}): type: 'Warning' reason: 'SnapshotCreationFailed' Failed to create snapshot: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "timestamp: seconds:1548418610614359937  after 10000-01-01"
+I0125 12:17:35.628235       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:17:35.628352       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:17:35.628382       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:17:35.628424       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:17:35.631359       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:17:35.631430       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:17:35.631501       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:17:35.631535       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:17:35.631576       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:17:35.631646       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:17:35.631673       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:17:35.631698       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:18:35.628519       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:18:35.629757       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:18:35.629778       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:18:35.629792       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:18:35.629808       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:18:35.629827       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:18:35.629839       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:18:35.629852       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:18:35.629870       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:18:35.629886       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:18:35.629894       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:18:35.629902       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:19:35.630817       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:19:35.631076       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:19:35.631160       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:19:35.631212       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:19:35.631269       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:19:35.631334       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:19:35.631375       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:19:35.631410       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:19:35.633187       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:19:35.633296       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:19:35.633314       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:19:35.633329       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:20:35.631716       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:20:35.631764       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:20:35.631778       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:20:35.631793       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:20:35.631836       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:20:35.631856       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:20:35.631881       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:20:35.631902       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:20:35.631929       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:20:35.631961       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:20:35.631975       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:20:35.631993       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:21:35.632160       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:21:35.632296       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:21:35.632323       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:21:35.632351       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:21:35.632370       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:21:35.632400       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:21:35.632425       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:21:35.632515       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:21:35.632548       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:21:35.632579       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:21:35.632600       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:21:35.632618       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:22:35.640074       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:22:35.640200       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:22:35.640232       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:22:35.640264       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:22:35.640303       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:22:35.640819       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:22:35.640884       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:22:35.640920       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:22:35.640974       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:22:35.641025       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:22:35.641053       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:22:35.641083       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:23:35.640246       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:23:35.640406       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:23:35.640494       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:23:35.640509       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:23:35.644267       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:23:35.651644       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:23:35.651674       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:23:35.651687       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:23:35.651703       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:23:35.651717       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:23:35.651729       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:23:35.651738       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:24:35.641521       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:24:35.641843       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:24:35.641884       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:24:35.641994       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:24:35.647372       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:24:35.647523       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:24:35.647598       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:24:35.647694       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:24:35.647772       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:24:35.647839       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:24:35.647969       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:24:35.648047       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:25:35.642013       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:25:35.642413       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:25:35.642533       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:25:35.642587       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:25:35.642740       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:25:35.642778       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:25:35.642809       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:25:35.642847       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:25:35.642910       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:25:35.642957       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:25:35.642985       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:25:35.643017       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:26:35.642417       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:26:35.642651       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:26:35.642725       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:26:35.642769       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:26:35.642818       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:26:35.642851       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:26:35.642883       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:26:35.642918       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:26:35.642946       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:26:35.642973       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:26:35.642998       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:26:35.643041       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:27:35.642686       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:27:35.642750       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:27:35.642760       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:27:35.642771       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:27:35.642778       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:27:35.642786       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:27:35.642794       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:27:35.642802       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:27:35.642812       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:27:35.642823       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:27:35.642829       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:27:35.642837       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:28:35.642905       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:28:35.642956       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:28:35.642967       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:28:35.642977       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:28:35.643006       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:28:35.643015       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:28:35.643023       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:28:35.643032       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:28:35.643043       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:28:35.643054       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:28:35.643062       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:28:35.643069       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:29:35.643561       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:29:35.643671       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:29:35.643695       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:29:35.643745       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:29:35.643770       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:29:35.643794       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:29:35.643814       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:29:35.643836       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:29:35.643866       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:29:35.643898       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:29:35.643919       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:29:35.643939       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:30:35.644078       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:30:35.644948       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:30:35.645090       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:30:35.645159       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:30:35.645200       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:30:35.645258       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:30:35.645279       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:30:35.645306       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:30:35.645362       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:30:35.645419       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:30:35.645580       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:30:35.645716       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:31:35.648516       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:31:35.648696       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:31:35.648731       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:31:35.648807       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:31:35.648834       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:31:35.648866       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:31:35.648896       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:31:35.648928       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:31:35.648966       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:31:35.649005       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:31:35.649032       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:31:35.649063       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:32:35.648860       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:32:35.648986       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:32:35.649001       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:32:35.649048       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:32:35.649089       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:32:35.649102       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:32:35.649126       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:32:35.649147       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:32:35.649180       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:32:35.649195       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:32:35.649216       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:32:35.649228       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:33:35.649686       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:33:35.650223       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:33:35.650266       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:33:35.650307       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:33:35.650327       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:33:35.650347       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:33:35.650391       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:33:35.650413       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:33:35.650506       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:33:35.650570       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:33:35.650602       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:33:35.650632       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:34:35.649556       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:34:35.649586       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:34:35.649592       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:34:35.649605       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:34:35.649612       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:34:35.649621       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:34:35.649628       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:34:35.649636       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:34:35.649644       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:34:35.649652       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:34:35.649658       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:34:35.649664       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:35:35.651214       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:35:35.651427       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:35:35.651680       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:35:35.651784       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:35:35.651909       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:35:35.651956       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:35:35.651996       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:35:35.652037       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:35:35.652086       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:35:35.652134       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:35:35.652168       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:35:35.652203       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:36:35.651645       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:36:35.651831       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:36:35.651863       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:36:35.651895       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:36:35.651928       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:36:35.651953       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:36:35.652031       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:36:35.652059       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:36:35.652108       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:36:35.652140       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:36:35.652162       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:36:35.652185       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:37:35.651981       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:37:35.652040       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:37:35.652046       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:37:35.652060       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:37:35.652066       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:37:35.652072       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:37:35.652085       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:37:35.652091       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:37:35.652098       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:37:35.652114       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:37:35.652126       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:37:35.652136       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:38:35.652235       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:38:35.652283       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:38:35.652289       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:38:35.652297       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:38:35.652305       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:38:35.652319       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:38:35.652331       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:38:35.652337       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:38:35.652344       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:38:35.652352       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:38:35.652357       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:38:35.652362       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:39:35.652708       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:39:35.657009       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:39:35.657099       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:39:35.657171       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:39:35.657213       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:39:35.657241       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:39:35.657261       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:39:35.657283       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:39:35.657315       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:39:35.657343       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:39:35.657387       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:39:35.657407       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:40:35.653855       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:40:35.654099       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:40:35.654129       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:40:35.654164       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:35.654191       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:35.655423       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:40:35.655501       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:40:35.655526       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:40:35.655565       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:40:35.655589       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:40:35.655611       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:40:35.655631       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:40:48.098480       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:40:48.098509       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:40:48.098515       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:40:48.098521       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:48.098525       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:48.098530       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:40:48.098537       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:40:48.098545       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:40:48.098557       1 util.go:107] storeObjectUpdate: adding snapshot "default/rbd-pvc-snapshot", version 33146
+I0125 12:40:48.098569       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:40:48.098576       1 snapshot_controller.go:191] syncSnapshot: Add Finalizer for VolumeSnapshot[default/rbd-pvc-snapshot]
+I0125 12:40:48.135646       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33146
+I0125 12:40:48.135678       1 snapshot_controller.go:1035] Added protection finalizer to volume snapshot default/rbd-pvc-snapshot
+I0125 12:40:48.135697       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:40:48.135766       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:40:48.135779       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:40:48.135790       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:48.135804       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:48.135814       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:40:48.135823       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:40:48.135834       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:40:48.135844       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33147
+I0125 12:40:48.135855       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:40:48.135863       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:40:48.135870       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:40:48.135878       1 snapshot_controller.go:357] createSnapshot[default/rbd-pvc-snapshot]: started
+I0125 12:40:48.135885       1 snapshot_controller.go:332] scheduleOperation[create-default/rbd-pvc-snapshot[70cc0ba9-209e-11e9-a1e9-52540088830b]]
+I0125 12:40:48.135928       1 snapshot_controller.go:594] createSnapshot: Creating snapshot default/rbd-pvc-snapshot through the plugin ...
+I0125 12:40:48.135950       1 snapshot_controller.go:521] getCreateSnapshotInput [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:48.135959       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:48.153247       1 snapshot_controller.go:847] getVolumeFromVolumeSnapshot: snapshot [rbd-pvc-snapshot] PV name [pvc-aa394dc4-207e-11e9-a1e9-52540088830b]
+W0125 12:40:48.153297       1 util.go:172] "csiSnapshotterSecretName" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-name" instead
+W0125 12:40:48.153323       1 util.go:177] "csiSnapshotterSecretNamespace" is deprecated and will be removed in a future release, please use "csi.storage.k8s.io/snapshotter-secret-namespace" instead
+I0125 12:40:48.153341       1 util.go:252] GetSecretReference namespaceTemplate default, namespaceParams: map[volumesnapshot.namespace:default volumesnapshotcontent.name:snapcontent-70cc0ba9-209e-11e9-a1e9-52540088830b], resolved default
+I0125 12:40:48.153406       1 util.go:285] GetSecretReference validated Secret: &SecretReference{Name:csi-rbd-secret,Namespace:default,}
+I0125 12:40:48.159829       1 connection.go:195] CSI CreateSnapshot: snapshot-70cc0ba9-209e-11e9-a1e9-52540088830b
+I0125 12:40:48.159863       1 connection.go:270] GRPC call: /csi.v1.Identity/GetPluginInfo
+I0125 12:40:48.159871       1 connection.go:271] GRPC request: {}
+I0125 12:40:48.165588       1 connection.go:273] GRPC response: {"name":"csi-rbdplugin","vendor_version":"1.0.0"}
+I0125 12:40:48.168267       1 connection.go:274] GRPC error: <nil>
+I0125 12:40:48.168281       1 connection.go:270] GRPC call: /csi.v1.Controller/CreateSnapshot
+I0125 12:40:48.168294       1 connection.go:271] GRPC request: {"name":"snapshot-70cc0ba9-209e-11e9-a1e9-52540088830b","parameters":{"csiSnapshotterSecretName":"csi-rbd-secret","csiSnapshotterSecretNamespace":"default","monitors":"rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789","pool":"rbd"},"secrets":"***stripped***","source_volume_id":"csi-rbd-vol-aa48be19-207e-11e9-98c8-5254005d68f0"}
+I0125 12:40:49.321851       1 connection.go:273] GRPC response: {"snapshot":{"creation_time":{"seconds":1548420049301024500},"ready_to_use":true,"size_bytes":1073741824,"snapshot_id":"csi-rbd-pvc-aa394dc4-207e-11e9-a1e9-52540088830b-snap-70d9119f-209e-11e9-98c8-5254005d68f0","source_volume_id":"csi-rbd-vol-aa48be19-207e-11e9-98c8-5254005d68f0"}}
+I0125 12:40:49.322860       1 connection.go:274] GRPC error: <nil>
+I0125 12:40:49.322871       1 connection.go:219] CSI CreateSnapshot: snapshot-70cc0ba9-209e-11e9-a1e9-52540088830b driver name [csi-rbdplugin] snapshot ID [csi-rbd-pvc-aa394dc4-207e-11e9-a1e9-52540088830b-snap-70d9119f-209e-11e9-98c8-5254005d68f0] time stamp [&{1548420049301024459 0 {} [] 0}] size [1073741824] readyToUse [true]
+I0125 12:40:49.322941       1 snapshot_controller.go:405] updateSnapshotStatusWithEvent[default/rbd-pvc-snapshot]
+I0125 12:40:49.333687       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+E0125 12:40:49.333760       1 snapshot_controller.go:363] createSnapshot [create-default/rbd-pvc-snapshot[70cc0ba9-209e-11e9-a1e9-52540088830b]]: error occurred in createSnapshotOperation: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "timestamp: seconds:1548420049301024459  after 10000-01-01"
+E0125 12:40:49.333825       1 goroutinemap.go:150] Operation for "create-default/rbd-pvc-snapshot[70cc0ba9-209e-11e9-a1e9-52540088830b]" failed. No retries permitted until 2019-01-25 12:40:49.833787574 +0000 UTC m=+2354.408098764 (durationBeforeRetry 500ms). Error: "failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: \"timestamp: seconds:1548420049301024459  after 10000-01-01\""
+I0125 12:40:49.333688       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:40:49.334159       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:40:49.334166       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:40:49.334173       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:49.334177       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:40:49.334183       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:40:49.334188       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:40:49.334194       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:40:49.334201       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:40:49.334209       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:40:49.334214       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:40:49.334219       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:40:49.334232       1 event.go:221] Event(v1.ObjectReference{Kind:"VolumeSnapshot", Namespace:"default", Name:"rbd-pvc-snapshot", UID:"70cc0ba9-209e-11e9-a1e9-52540088830b", APIVersion:"snapshot.storage.k8s.io/v1alpha1", ResourceVersion:"33150", FieldPath:""}): type: 'Warning' reason: 'SnapshotCreationFailed' Failed to create snapshot: failed to take snapshot of the volume, pvc-aa394dc4-207e-11e9-a1e9-52540088830b: "timestamp: seconds:1548420049301024459  after 10000-01-01"
+I0125 12:41:35.654114       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:41:35.655243       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:41:35.655297       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:41:35.655321       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:41:35.655357       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:41:35.655383       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:41:35.655429       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:41:35.655501       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:41:35.655537       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:41:35.655573       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:41:35.655615       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:41:35.655640       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:41:35.655664       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:41:35.655700       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:41:35.655724       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:41:35.655770       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:41:35.655793       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:41:35.655820       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:41:35.655846       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:41:35.655893       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:41:35.655931       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:41:35.655967       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:41:35.655991       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:41:35.656023       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:42:35.654700       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:42:35.654836       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:42:35.654884       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:42:35.654917       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:42:35.654958       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:42:35.654987       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:42:35.655022       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:42:35.655051       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:42:35.655082       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:42:35.655124       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:42:35.655162       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:42:35.655189       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:42:35.655222       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:42:35.655257       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:42:35.655280       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:42:35.655310       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:42:35.655337       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:42:35.655362       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:42:35.655388       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:42:35.655418       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:42:35.655506       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:42:35.655552       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:42:35.655577       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:42:35.655603       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:43:35.654978       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:43:35.655095       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:43:35.655126       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:43:35.655139       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:43:35.655158       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:43:35.655185       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:43:35.655204       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:43:35.655240       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:43:35.655255       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:43:35.655279       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:43:35.655303       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:43:35.655321       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:43:35.655340       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:43:35.655363       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:43:35.655379       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:43:35.655393       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:43:35.655409       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:43:35.655422       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:43:35.655507       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:43:35.655530       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:43:35.655545       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:43:35.655560       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:43:35.655571       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:43:35.655594       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:44:35.657305       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:44:35.657399       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:44:35.657425       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:44:35.657474       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:44:35.657500       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:44:35.657540       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:44:35.657553       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:44:35.657566       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:44:35.657579       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:44:35.657596       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:44:35.657615       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:44:35.657621       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:44:35.657653       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:44:35.657706       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:44:35.657743       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:44:35.657761       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:44:35.657776       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:44:35.657803       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:44:35.657825       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:44:35.657848       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:44:35.657887       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:44:35.657903       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:44:35.657629       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:44:35.657931       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:45:35.657673       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:45:35.665116       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:45:35.665244       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:45:35.665333       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:45:35.665409       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:45:35.665533       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:45:35.665590       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:45:35.665629       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:45:35.665666       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:45:35.665823       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:45:35.665896       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:45:35.665932       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:45:35.665965       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:45:35.666037       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:45:35.666100       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:45:35.666142       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:45:35.666186       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:45:35.666216       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:45:35.666268       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:45:35.666299       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:45:35.666351       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:45:35.666392       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:45:35.666438       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:45:35.667300       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:46:35.658583       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:46:35.658830       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:46:35.658896       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:46:35.659805       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:46:35.659914       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:46:35.658897       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:46:35.660002       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:46:35.660038       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:46:35.660055       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:46:35.660094       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:46:35.660135       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:46:35.660165       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:46:35.660243       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:46:35.660555       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:46:35.660682       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:46:35.660830       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:46:35.660966       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:46:35.661045       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:46:35.660101       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:46:35.661188       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:46:35.661276       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:46:35.661330       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:46:35.661395       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:46:35.661487       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:47:35.659257       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:47:35.659419       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:47:35.659544       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:47:35.659576       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:47:35.659630       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:47:35.659776       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:47:35.659808       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:47:35.659837       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:47:35.659869       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:47:35.659906       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:47:35.659945       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:47:35.676857       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:47:35.676946       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:47:35.676998       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:47:35.677030       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:47:35.677065       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:47:35.677101       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:47:35.677141       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:47:35.677186       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:47:35.677235       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:47:35.677266       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:47:35.677300       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:47:35.659974       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:47:35.677515       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:48:35.659236       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:48:35.659346       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:48:35.659366       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:48:35.659386       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:48:35.659400       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:48:35.659475       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:48:35.659497       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:48:35.659510       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:48:35.659521       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:48:35.659541       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:48:35.659561       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:48:35.659581       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:48:35.659595       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:48:35.659611       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:48:35.659621       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:48:35.659636       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:48:35.659647       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:48:35.659660       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:48:35.659673       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:48:35.659687       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:48:35.659701       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:48:35.659716       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:48:35.659736       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:48:35.659750       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:49:35.659953       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:49:35.660073       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:49:35.660103       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:49:35.660121       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:49:35.660144       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:49:35.660161       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:49:35.660181       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:49:35.660200       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:49:35.660219       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:49:35.660265       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:49:35.660293       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:49:35.660314       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:49:35.660334       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:49:35.660360       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:49:35.660377       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:49:35.660398       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:49:35.660414       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:49:35.660435       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:49:35.660587       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:49:35.660621       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:49:35.660646       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:49:35.660671       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:49:35.660689       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:49:35.660763       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:50:35.661009       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:50:35.661890       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:50:35.661938       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:50:35.661959       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:50:35.661985       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:50:35.662033       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:50:35.662057       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:50:35.662079       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:50:35.662102       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:50:35.662133       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:50:35.662165       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:50:35.662187       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:50:35.662210       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:50:35.662237       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:50:35.662257       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:50:35.662279       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:50:35.662298       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:50:35.662317       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:50:35.662339       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:50:35.662368       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:50:35.662402       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:50:35.662580       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:50:35.662625       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:50:35.662660       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:51:35.661649       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:51:35.661738       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:51:35.661755       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:51:35.661764       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:51:35.661776       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:51:35.661785       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:51:35.661794       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:51:35.661803       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:51:35.661813       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:51:35.661825       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:51:35.661837       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:51:35.661846       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:51:35.661855       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:51:35.661866       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:51:35.661874       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:51:35.661883       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:51:35.661890       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:51:35.662643       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:51:35.662665       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:51:35.662674       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:51:35.662685       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:51:35.662695       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:51:35.662702       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:51:35.662709       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:52:35.661877       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:52:35.663204       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:52:35.664389       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:52:35.664418       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:52:35.664458       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:52:35.664480       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:52:35.664493       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:52:35.664506       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:52:35.664519       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:52:35.664532       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:52:35.664543       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:52:35.664561       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:52:35.664570       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:52:35.664584       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:52:35.664595       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:52:35.664610       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:52:35.664621       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:52:35.664631       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:52:35.664642       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:52:35.664657       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:52:35.664666       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:52:35.664679       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:52:35.664689       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:52:35.664698       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:53:35.662156       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:53:35.662203       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:53:35.662223       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:53:35.662232       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:53:35.662251       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:53:35.662285       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:53:35.662306       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:53:35.662319       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:53:35.662332       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:53:35.662343       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:53:35.662358       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:53:35.662377       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:53:35.662386       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:53:35.662403       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:53:35.662410       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:53:35.662418       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:53:35.662425       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:53:35.662432       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:53:35.662457       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:53:35.662467       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:53:35.662485       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:53:35.662513       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:53:35.662522       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:53:35.662530       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:54:35.670635       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:54:35.670795       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:54:35.670837       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:54:35.670862       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:54:35.670907       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:54:35.670929       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:54:35.670998       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:54:35.671029       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:54:35.671058       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:54:35.671100       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:54:35.671115       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:54:35.671148       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:54:35.671171       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:54:35.671194       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:54:35.671168       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:54:35.671239       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:54:35.671257       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:54:35.671277       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:54:35.671297       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:54:35.671319       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:54:35.671345       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:54:35.671378       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:54:35.671401       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:54:35.671428       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:55:35.671001       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:55:35.671230       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:55:35.671253       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:55:35.671259       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:55:35.671269       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:55:35.671277       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:55:35.671291       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:55:35.671291       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:55:35.671301       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:55:35.671303       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:55:35.671312       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:55:35.671332       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:55:35.671345       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:55:35.671387       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:55:35.671424       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:55:35.671435       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:55:35.671467       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:55:35.671312       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:55:35.671511       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:55:35.671524       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:55:35.671541       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:55:35.671557       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:55:35.671568       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:55:35.671578       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:56:35.671665       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:56:35.671820       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:56:35.671877       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:56:35.671911       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:56:35.671949       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:56:35.671977       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:56:35.672012       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:56:35.672047       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:56:35.672082       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:56:35.672124       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:56:35.672168       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:56:35.672199       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:56:35.672232       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:56:35.672271       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:56:35.672300       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:56:35.672336       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:56:35.672363       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:56:35.672394       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:56:35.672426       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:56:35.672830       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:56:35.672903       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:56:35.672950       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:56:35.672980       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:56:35.673012       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:57:35.671656       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:57:35.671776       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:57:35.671802       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:57:35.671819       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:57:35.671837       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:57:35.671849       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:57:35.671863       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:57:35.671878       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:57:35.671901       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:57:35.671923       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:57:35.671954       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:57:35.671979       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:57:35.671996       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:57:35.672023       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:57:35.672053       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:57:35.672069       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:57:35.672081       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:57:35.672102       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:57:35.672115       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:57:35.672129       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:57:35.672143       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:57:35.672160       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:57:35.672172       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:57:35.672184       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:58:35.671919       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:58:35.671982       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:58:35.672002       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:58:35.672015       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:58:35.672034       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:58:35.672052       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:58:35.672063       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:58:35.672073       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:58:35.672084       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:58:35.672102       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:58:35.672118       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:58:35.672134       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:58:35.672143       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:58:35.672239       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:58:35.672248       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:58:35.672265       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:58:35.672498       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:58:35.672515       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:58:35.672524       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:58:35.672533       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:58:35.672548       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:58:35.672562       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:58:35.672571       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:58:35.672581       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 12:59:35.672081       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 12:59:35.672133       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 12:59:35.672144       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 12:59:35.672150       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 12:59:35.672158       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:59:35.672165       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:59:35.672175       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:59:35.672186       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 12:59:35.672198       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 12:59:35.672214       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 12:59:35.672226       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 12:59:35.672232       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 12:59:35.672238       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 12:59:35.672246       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 12:59:35.672251       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 12:59:35.672258       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:59:35.672267       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 12:59:35.672276       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 12:59:35.672286       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 12:59:35.672295       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 12:59:35.672305       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 12:59:35.672315       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 12:59:35.672323       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 12:59:35.672330       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found
+I0125 13:00:35.672699       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot1" for sync
+I0125 13:00:35.672926       1 snapshot_controller_base.go:169] enqueued "default/rbd-pvc-snapshot" for sync
+I0125 13:00:35.672993       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot1]
+I0125 13:00:35.673026       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot1]
+I0125 13:00:35.673070       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot1]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 13:00:35.673154       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 13:00:35.673201       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 13:00:35.673255       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot1"
+I0125 13:00:35.673328       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot1"
+I0125 13:00:35.673398       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot1" with version 30918
+I0125 13:00:35.673501       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot1]: bound to: "", Completed: false
+I0125 13:00:35.673541       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot1
+I0125 13:00:35.673582       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot1 found
+I0125 13:00:35.673643       1 snapshot_controller_base.go:201] snapshotWorker[default/rbd-pvc-snapshot]
+I0125 13:00:35.673667       1 snapshot_controller_base.go:204] snapshotWorker: snapshot namespace [default] name [rbd-pvc-snapshot]
+I0125 13:00:35.673694       1 snapshot_controller_base.go:347] checkAndUpdateSnapshotClass [rbd-pvc-snapshot]: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 13:00:35.673741       1 snapshot_controller.go:878] getSnapshotClass: VolumeSnapshotClassName [csi-rbdplugin-snapclass]
+I0125 13:00:35.683901       1 snapshot_controller_base.go:364] VolumeSnapshotClass Snapshotter [csi-rbdplugin] Snapshot Controller snapshotterName [csi-rbdplugin]
+I0125 13:00:35.684013       1 snapshot_controller_base.go:215] passed checkAndUpdateSnapshotClass for snapshot "default/rbd-pvc-snapshot"
+I0125 13:00:35.684061       1 snapshot_controller_base.go:377] updateSnapshot "default/rbd-pvc-snapshot"
+I0125 13:00:35.684114       1 util.go:135] storeObjectUpdate updating snapshot "default/rbd-pvc-snapshot" with version 33150
+I0125 13:00:35.684164       1 snapshot_controller.go:176] synchonizing VolumeSnapshot[default/rbd-pvc-snapshot]: bound to: "", Completed: false
+I0125 13:00:35.684197       1 snapshot_controller.go:242] syncUnreadySnapshot default/rbd-pvc-snapshot
+I0125 13:00:35.684231       1 snapshot_controller.go:313] No VolumeSnapshotContent for VolumeSnapshot default/rbd-pvc-snapshot found

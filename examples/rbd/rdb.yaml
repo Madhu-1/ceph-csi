@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2019-01-25T08:07:12Z"
+  generateName: csi-rbdplugin-provisioner-
+  labels:
+    app: csi-rbdplugin-provisioner
+    controller-revision-hash: csi-rbdplugin-provisioner-79b8d748b6
+    statefulset.kubernetes.io/pod-name: csi-rbdplugin-provisioner-0
+  name: csi-rbdplugin-provisioner-0
+  namespace: default
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: StatefulSet
+    name: csi-rbdplugin-provisioner
+    uid: 38924264-2078-11e9-a1e9-52540088830b
+  resourceVersion: "8038"
+  selfLink: /api/v1/namespaces/default/pods/csi-rbdplugin-provisioner-0
+  uid: 389b90ad-2078-11e9-a1e9-52540088830b
+spec:
+  containers:
+  - args:
+    - --csi-address=$(ADDRESS)
+    - --v=5
+    env:
+    - name: ADDRESS
+      value: /var/lib/kubelet/plugins_registry/csi-rbdplugin/csi.sock
+    image: quay.io/k8scsi/csi-provisioner:canary
+    imagePullPolicy: IfNotPresent
+    name: csi-provisioner
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/lib/kubelet/plugins_registry/csi-rbdplugin
+      name: socket-dir
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: csi-provisioner-token-x4vwb
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostname: csi-rbdplugin-provisioner-0
+  nodeName: kube2
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: csi-provisioner
+  serviceAccountName: csi-provisioner
+  subdomain: csi-rbdplugin-provisioner
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - hostPath:
+      path: /var/lib/kubelet/plugins_registry/csi-rbdplugin
+      type: DirectoryOrCreate
+    name: socket-dir
+  - name: csi-provisioner-token-x4vwb
+    secret:
+      defaultMode: 420
+      secretName: csi-provisioner-token-x4vwb
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2019-01-25T08:07:13Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2019-01-25T08:07:52Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2019-01-25T08:07:52Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2019-01-25T08:07:12Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://86e11e80cf85cf32b94bc9da3aa908333d6769bcf66062535a21b721ca26c218
+    image: quay.io/k8scsi/csi-provisioner:canary
+    imageID: docker-pullable://quay.io/k8scsi/csi-provisioner@sha256:7605fe0abd53fe6075b04c18cb69663311c2ae34c4a3007a65d545b6a0e529e8
+    lastState: {}
+    name: csi-provisioner
+    ready: true
+    restartCount: 0
+    state:
+      running:
+        startedAt: "2019-01-25T08:07:52Z"
+  hostIP: 192.168.121.134
+  phase: Running
+  podIP: 10.233.65.17
+  qosClass: BestEffort
+  startTime: "2019-01-25T08:07:13Z"

@@ -312,8 +312,8 @@
     "storage/v1alpha1",
     "storage/v1beta1"
   ]
-  revision = "89a74a8d264df0e993299876a8cde88379b940ee"
-  version = "kubernetes-1.13.0"
+  revision = "67edc246be36579e46a89e29a2f165d47e012109"
+  version = "kubernetes-1.13.2"
 
 [[projects]]
   name = "k8s.io/apimachinery"
@@ -417,8 +417,8 @@
     "util/homedir",
     "util/integer"
   ]
-  revision = "e64494209f554a6723674bd494d69445fb76a1d4"
-  version = "kubernetes-1.13.0"
+  revision = "6bf63545bd0257ed9e701ad95307ffa51b4407c0"
+  version = "kubernetes-1.13.2"
 
 [[projects]]
   name = "k8s.io/klog"
@@ -453,6 +453,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "1f4b8deb03e79a1ae0419d794d2bc213a5c4298cb4cf213f8ef5f6ff8a025c95"
+  inputs-digest = "e70dbd7a40acbfdc30c9881508b0fda3801cb105e134e1b779ea147dcaad359c"
   solver-name = "gps-cdcl"
   solver-version = 1
