@@ -27,7 +27,7 @@ import (
 
 var (
 	endpoint        = flag.String("endpoint", "unix://tmp/csi.sock", "CSI endpoint")
-	driverName      = flag.String("drivername", "csi-cephfsplugin", "name of the driver")
+	driverName      = flag.String("drivername", "cephfsplugin.csi.ceph.com", "name of the driver")
 	nodeID          = flag.String("nodeid", "", "node id")
 	volumeMounter   = flag.String("volumemounter", "", "default volume mounter (possible options are 'kernel', 'fuse')")
 	metadataStorage = flag.String("metadatastorage", "", "metadata persistence method [node|k8s_configmap]")

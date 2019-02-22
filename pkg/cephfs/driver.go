@@ -27,7 +27,7 @@ import (
 
 const (
 	// PluginFolder defines the location of ceph plugin
-	PluginFolder = "/var/lib/kubelet/plugins/csi-cephfsplugin"
+	PluginFolder = "/var/lib/kubelet/plugins/cephfsplugin.csi.ceph.com"
 	// version of ceph driver
 	version = "1.0.0"
 )
