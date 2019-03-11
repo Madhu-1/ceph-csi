@@ -47,6 +47,8 @@ func main() {
 	if err != nil {
 		klog.Fatalln(err)
 	}
+	//update plugin name
+	cephfs.PluginFolder = cephfs.PluginFolder + *driverName
 
 	cp, err := util.CreatePersistanceStorage(cephfs.PluginFolder, *metadataStorage, *driverName)
 	if err != nil {

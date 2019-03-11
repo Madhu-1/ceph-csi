@@ -47,6 +47,8 @@ func main() {
 	if err != nil {
 		klog.Fatalln(err)
 	}
+	//update plugin name
+	rbd.PluginFolder = rbd.PluginFolder + *driverName
 
 	cp, err := util.CreatePersistanceStorage(rbd.PluginFolder, *metadataStorage, *driverName)
 	if err != nil {
