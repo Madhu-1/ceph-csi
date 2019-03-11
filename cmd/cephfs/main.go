@@ -43,6 +43,11 @@ func init() {
 
 func main() {
 
+	err := util.ValidateDriverName(*driverName)
+	if err != nil {
+		klog.Fatalln(err)
+	}
+
 	cp, err := util.CreatePersistanceStorage(cephfs.PluginFolder, *metadataStorage, *driverName)
 	if err != nil {
 		os.Exit(1)
