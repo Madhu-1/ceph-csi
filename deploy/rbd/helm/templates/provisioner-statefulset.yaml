@@ -43,7 +43,7 @@ spec:
 {{ toYaml .Values.provisioner.resources | indent 12 }}
         - name: csi-snapshotter
           image: {{ .Values.snapshotter.image.repository }}:{{ .Values.snapshotter.image.tag }}
-          imagePullPolicy: {{ .Values.nodeplugin.plugin.image.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.nodeplugin.plugin.image.pullPolicy }}
           args:
             - "--csi-address=$(ADDRESS)"
             - "--connection-timeout=15s"
@@ -58,6 +58,20 @@ spec:
               mountPath: {{ .Values.socketDir }}
           resources:
 {{ toYaml .Values.snapshotter.resources | indent 12 }}
+        {{ if .Values.attacher.enabled }}
+        - name: csi-attacher
+          image: "{{ .Values.attacher.image.repository }}:{{ .Values.attacher.image.tag }}"
+          args:
+            - "--v=5"
+            - "--csi-address=$(ADDRESS)"
+          env:
+            - name: ADDRESS
+              value: "{{ .Values.socketDir }}/{{ .Values.socketFile }}"
+          imagePullPolicy: {{ .Values.attacher.image.pullPolicy }}
+          volumeMounts:
+            - name: socket-dir
+              mountPath: {{ .Values.socketDir }}
+        {{ end }}
         - name: csi-rbdplugin
           securityContext:
             privileged: true
@@ -83,7 +97,7 @@ spec:
                   fieldPath: spec.nodeName
             - name: CSI_ENDPOINT
               value: "unix:/{{ .Values.socketDir }}/{{ .Values.socketFile }}"
-          imagePullPolicy: {{ .Values.nodeplugin.plugin.image.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.nodeplugin.plugin.image.pullPolicy }}
           volumeMounts:
             - name: socket-dir
               mountPath: {{ .Values.socketDir }}
@@ -97,7 +111,7 @@ spec:
 #FIXME this seems way too much. Why is it needed at all for this?
         - name: host-rootfs
           hostPath:
-            path: /            
+            path: /
     {{- if .Values.provisioner.affinity -}}
       affinity:
 {{ toYaml .Values.provisioner.affinity . | indent 8 }}

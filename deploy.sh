@@ -1,6 +1,6 @@
 #!/bin/bash
 
-push_helm_chats() {
+push_helm_charts() {
 	PACKAGE=$1
 	CHANGED=0
 	VERSION=$(grep 'version:' deploy/"$PACKAGE"/helm/Chart.yaml | awk '{print $2}')
@@ -25,11 +25,11 @@ push_helm_chats() {
 }
 
 if [ "${TRAVIS_BRANCH}" == 'csi-v0.3' ]; then
-	export RBD_IMAGE_VERSION='v0.3.0'
-	export CEPHFS_IMAGE_VERSION='v0.3.0'
-elif [ "${TRAVIS_BRANCH}" == 'csi-v1.0' ]; then
-	export RBD_IMAGE_VERSION='v1.0.0'
-	export CEPHFS_IMAGE_VERSION='v1.0.0'
+	export ENV_RBD_IMAGE_VERSION='v0.3-canary'
+	export ENV_CEPHFS_IMAGE_VERSION='v0.3-canary'
+elif [ "${TRAVIS_BRANCH}" == 'master' ]; then
+	export ENV_RBD_IMAGE_VERSION='canary'
+	export ENV_CEPHFS_IMAGE_VERSION='canary'
 else
 	echo "!!! Branch ${TRAVIS_BRANCH} is not a deployable branch; exiting"
 	exit 0 # Exiting 0 so that this isn't marked as failing
@@ -53,6 +53,6 @@ if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
 	mkdir -p csi-charts/docs
 	popd >/dev/null
 
-	push_helm_chats rbd
-	push_helm_chats cephfs
+	push_helm_charts rbd
+	push_helm_charts cephfs
 fi
