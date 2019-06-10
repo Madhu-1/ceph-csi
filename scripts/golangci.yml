@@ -97,8 +97,6 @@ linters-settings:
     # Setting locale to US will correct the British spelling of 'colour' to
     # 'color'.
     locale: US
-    ignore-words:
-      - someword
   lll:
     # max line length, lines longer will be reported. Default is 120.
     # '\t' is counted as 1 character by default, and can be changed with the
@@ -107,6 +105,18 @@ linters-settings:
     line-length: 180
     # tab width in spaces. Default to 1.
     tab-width: 1
+  gocritic:
+    enabled-tags:
+      - performance
+      - style
+      - experimental
+    disabled-checks:
+      - sloppyReassign
+      - elseif
+      - unslice
+      - wrapperFunc
+      - unnamedResult
+      - dupImport # https://github.com/go-critic/go-critic/issues/845
   unused:
     # treat code as a program (not a library) and report unused exported
     # identifiers; default is false.
@@ -131,23 +141,9 @@ linters-settings:
     max-func-lines: 30
 
 linters:
-  enable:
-    - megacheck
-    - govet
-    - golint
-    - stylecheck
-    - interfacer
-    - unconvert
-    - gofmt
-    - gocyclo
-    - maligned
-    - lll
-    - nakedret
-  enable-all: false
+  enable-all: true
   disable:
+    - dupl
+    - gochecknoinits
+    - gochecknoglobals
     - prealloc
-  disable-all: false
-  presets:
-    - bugs
-    - unused
-  fast: false

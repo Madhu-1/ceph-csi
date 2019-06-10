@@ -23,6 +23,7 @@ import (
 	"os/exec"
 	"regexp"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/ceph/ceph-csi/pkg/util"
@@ -177,7 +178,7 @@ func mountKernel(mountPoint string, cr *credentials, volOptions *volumeOptions) 
 	}
 	optionsStr := fmt.Sprintf("name=%s,secret=%s", cr.id, cr.key)
 	if volOptions.FsName != "" {
-		optionsStr = optionsStr + fmt.Sprintf(",mds_namespace=%s", volOptions.FsName)
+		optionsStr += fmt.Sprintf(",mds_namespace=%s", volOptions.FsName)
 	}
 	args = append(args, "-o", optionsStr)
 
@@ -194,13 +195,15 @@ func (m *kernelMounter) mount(mountPoint string, cr *credentials, volOptions *vo
 
 func (m *kernelMounter) name() string { return "Ceph kernel client" }
 
-func bindMount(from, to string, readOnly bool) error {
-	if err := execCommandErr("mount", "--bind", from, to); err != nil {
+func bindMount(from, to string, readOnly bool, mntOptions []string) error {
+	mntOptionSli := strings.Join(mntOptions, ",")
+	if err := execCommandErr("mount", "-o", mntOptionSli, from, to); err != nil {
 		return fmt.Errorf("failed to bind-mount %s to %s: %v", from, to, err)
 	}
 
 	if readOnly {
-		if err := execCommandErr("mount", "-o", "remount,ro,bind", to); err != nil {
+		mntOptionSli += ",remount"
+		if err := execCommandErr("mount", "-o", mntOptionSli, to); err != nil {
 			return fmt.Errorf("failed read-only remount of %s: %v", to, err)
 		}
 	}

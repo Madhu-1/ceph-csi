@@ -34,7 +34,7 @@ var (
 	volumeMountCacheMtx    sync.Mutex
 )
 
-func initVolumeMountCache(driverName string, mountCacheDir string) {
+func initVolumeMountCache(driverName, mountCacheDir string) {
 	volumeMountCache.volumes = make(map[string]volumeMountCacheEntry)
 
 	volumeMountCache.nodeCacheStore.BasePath = mountCacheDir
@@ -136,9 +136,11 @@ func mountOneCacheEntry(volOptions *volumeOptions, vid *volumeIdentifier, me *vo
 			return err
 		}
 	}
+
+	mountOptions := []string{"bind"}
 	for targetPath, readOnly := range me.TargetPaths {
 		if err := cleanupMountPoint(targetPath); err == nil {
-			if err := bindMount(me.StagingPath, targetPath, readOnly); err != nil {
+			if err := bindMount(me.StagingPath, targetPath, readOnly, mountOptions); err != nil {
 				klog.Errorf("mount-cache: failed to bind-mount volume %s: %s %s %v %v",
 					volID, me.StagingPath, targetPath, readOnly, err)
 			} else {
@@ -157,7 +159,7 @@ func cleanupMountPoint(mountPoint string) error {
 			err := execCommandErr("umount", mountPoint)
 			if err != nil {
 				klog.Infof("mount-cache: failed to umount %s %v", mountPoint, err)
-				//ignore error return err
+				// ignore error return err
 			}
 		}
 	}
@@ -199,7 +201,7 @@ func genVolumeMountCacheFileName(volID string) string {
 	return cachePath
 }
 func (mc *volumeMountCacheMap) isEnable() bool {
-	//if mount cache dir unset, disable state
+	// if mount cache dir unset, disable state
 	return mc.nodeCacheStore.BasePath != ""
 }
 
@@ -244,7 +246,7 @@ func (mc *volumeMountCacheMap) nodeUnStageVolume(volID string) error {
 	return mc.nodeCacheStore.Delete(genVolumeMountCacheFileName(volID))
 }
 
-func (mc *volumeMountCacheMap) nodePublishVolume(volID string, targetPath string, readOnly bool) error {
+func (mc *volumeMountCacheMap) nodePublishVolume(volID, targetPath string, readOnly bool) error {
 	if !mc.isEnable() {
 		return nil
 	}
@@ -259,7 +261,7 @@ func (mc *volumeMountCacheMap) nodePublishVolume(volID string, targetPath string
 	return mc.updateNodeCache(volID)
 }
 
-func (mc *volumeMountCacheMap) nodeUnPublishVolume(volID string, targetPath string) error {
+func (mc *volumeMountCacheMap) nodeUnPublishVolume(volID, targetPath string) error {
 	if !mc.isEnable() {
 		return nil
 	}
