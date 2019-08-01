@@ -15,6 +15,11 @@
   name = "google.golang.org/grpc"
   version = "1.10.0"
 
+
+[[override]]
+  branch = "master"
+  name = "github.com/ceph/go-ceph"
+
 [[override]]
   version = "kubernetes-1.15.0"
   name = "k8s.io/apimachinery"

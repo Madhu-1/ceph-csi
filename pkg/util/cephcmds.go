@@ -20,8 +20,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os"
 	"os/exec"
 	"strings"
 
@@ -119,20 +117,22 @@ func GetPoolName(monitors string, cr *Credentials, poolID int64) (string, error)
 // SetOMapKeyValue sets the given key and value into the provided Ceph omap name
 func SetOMapKeyValue(monitors string, cr *Credentials, poolName, namespace, oMapName, oMapKey, keyValue string) error {
 	// Command: "rados <options> setomapval oMapName oMapKey keyValue"
-	args := []string{
-		"-m", monitors,
-		"--id", cr.ID,
-		"--keyfile=" + cr.KeyFile,
-		"-c", CephConfigPath,
-		"-p", poolName,
-		"setomapval", oMapName, oMapKey, keyValue,
+	ioCtx, err := NewContextWithPool(monitors, cr.ID, cr.KeyFile, CephConfigPath, poolName, namespace)
+	if err != nil {
+		klog.Errorf("error creating a new connection with pool %v", err)
+		return err
+	}
+	defer ioCtx.Destroy()
+	oMapKeys := map[string][]byte{}
+	if oMapKey == "" {
+		oMapKeys = nil
+	} else {
+		oMapKeys = map[string][]byte{
+			oMapKey: []byte(keyValue),
+		}
 	}
 
-	if namespace != "" {
-		args = append(args, "--namespace="+namespace)
-	}
-
-	_, _, err := ExecCommand("rados", args[:]...)
+	err = ioCtx.SetOmap(oMapName, oMapKeys)
 	if err != nil {
 		klog.Errorf("failed adding key (%s with value %s), to omap (%s) in "+
 			"pool (%s): (%v)", oMapKey, keyValue, oMapName, poolName, err)
@@ -146,37 +146,22 @@ func SetOMapKeyValue(monitors string, cr *Credentials, poolName, namespace, oMap
 func GetOMapValue(monitors string, cr *Credentials, poolName, namespace, oMapName, oMapKey string) (string, error) {
 	// Command: "rados <options> getomapval oMapName oMapKey <outfile>"
 	// No such key: replicapool/csi.volumes.directory.default/csi.volname
-	tmpFile, err := ioutil.TempFile("", "omap-get-")
+	ioCtx, err := NewContextWithPool(monitors, cr.ID, cr.KeyFile, CephConfigPath, poolName, namespace)
 	if err != nil {
-		klog.Errorf("failed creating a temporary file for key contents")
+		klog.Errorf("error creating a new connection with pool %v", err)
 		return "", err
 	}
-	defer tmpFile.Close()
-	defer os.Remove(tmpFile.Name())
+	defer ioCtx.Destroy()
 
-	args := []string{
-		"-m", monitors,
-		"--id", cr.ID,
-		"--keyfile=" + cr.KeyFile,
-		"-c", CephConfigPath,
-		"-p", poolName,
-		"getomapval", oMapName, oMapKey, tmpFile.Name(),
-	}
-
-	if namespace != "" {
-		args = append(args, "--namespace="+namespace)
-	}
-
-	stdout, stderr, err := ExecCommand("rados", args[:]...)
+	value, err := ioCtx.GetOmapValues(oMapName, "", oMapKey, 1)
 	if err != nil {
 		// no logs, as attempting to check for non-existent key/value is done even on
 		// regular call sequences
-		stdoutanderr := strings.Join([]string{string(stdout), string(stderr)}, " ")
-		if strings.Contains(stdoutanderr, "No such key: "+poolName+"/"+oMapName+"/"+oMapKey) {
+		if strings.Contains(err.Error(), "No such key: "+poolName+"/"+oMapName+"/"+oMapKey) {
 			return "", ErrKeyNotFound{poolName + "/" + oMapName + "/" + oMapKey, err}
 		}
 
-		if strings.Contains(stdoutanderr, "error getting omap value "+
+		if strings.Contains(err.Error(), "error getting omap value "+
 			poolName+"/"+oMapName+"/"+oMapKey+": (2) No such file or directory") {
 			return "", ErrKeyNotFound{poolName + "/" + oMapName + "/" + oMapKey, err}
 		}
@@ -185,31 +170,23 @@ func GetOMapValue(monitors string, cr *Credentials, poolName, namespace, oMapNam
 		klog.Errorf("failed getting omap value for key (%s) from omap (%s) in pool (%s): (%v)",
 			oMapKey, oMapName, poolName, err)
 
-		return "", fmt.Errorf("error (%v) occurred, command output streams is (%s)",
-			err.Error(), stdoutanderr)
+		return "", fmt.Errorf("error (%v) occurred", err.Error())
 	}
 
-	keyValue, err := ioutil.ReadAll(tmpFile)
-	return string(keyValue), err
+	return string(value), err
 }
 
 // RemoveOMapKey removes the omap key from the given omap name
 func RemoveOMapKey(monitors string, cr *Credentials, poolName, namespace, oMapName, oMapKey string) error {
 	// Command: "rados <options> rmomapkey oMapName oMapKey"
-	args := []string{
-		"-m", monitors,
-		"--id", cr.ID,
-		"--keyfile=" + cr.KeyFile,
-		"-c", CephConfigPath,
-		"-p", poolName,
-		"rmomapkey", oMapName, oMapKey,
+	ioCtx, err := NewContextWithPool(monitors, cr.ID, cr.KeyFile, CephConfigPath, poolName, namespace)
+	if err != nil {
+		klog.Errorf("error creating a new connection with pool %v", err)
+		return err
 	}
+	defer ioCtx.Destroy()
 
-	if namespace != "" {
-		args = append(args, "--namespace="+namespace)
-	}
-
-	_, _, err := ExecCommand("rados", args[:]...)
+	err = ioCtx.RmOmapKeys(oMapName, oMapKey)
 	if err != nil {
 		// NOTE: Missing omap key removal does not return an error
 		klog.Errorf("failed removing key (%s), from omap (%s) in "+
@@ -223,24 +200,18 @@ func RemoveOMapKey(monitors string, cr *Credentials, poolName, namespace, oMapNa
 // CreateObject creates the object name passed in and returns ErrObjectExists if the provided object
 // is already present in rados
 func CreateObject(monitors string, cr *Credentials, poolName, namespace, objectName string) error {
-	// Command: "rados <options> create objectName"
-	args := []string{
-		"-m", monitors,
-		"--id", cr.ID,
-		"--keyfile=" + cr.KeyFile,
-		"-c", CephConfigPath,
-		"-p", poolName,
-		"create", objectName,
+	ioCtx, err := NewContextWithPool(monitors, cr.ID, cr.KeyFile, CephConfigPath, poolName, namespace)
+	if err != nil {
+		klog.Errorf("error creating a new connection with pool %v", err)
+		return err
 	}
+	defer ioCtx.Destroy()
 
-	if namespace != "" {
-		args = append(args, "--namespace="+namespace)
-	}
+	err = ioCtx.SetOmap(objectName, "")
 
-	_, stderr, err := ExecCommand("rados", args[:]...)
 	if err != nil {
 		klog.Errorf("failed creating omap (%s) in pool (%s): (%v)", objectName, poolName, err)
-		if strings.Contains(string(stderr), "error creating "+poolName+"/"+objectName+
+		if strings.Contains(err.Error(), "error creating "+poolName+"/"+objectName+
 			": (17) File exists") {
 			return ErrObjectExists{objectName, err}
 		}
@@ -252,27 +223,21 @@ func CreateObject(monitors string, cr *Credentials, poolName, namespace, objectN
 
 // RemoveObject removes the entire omap name passed in and returns ErrObjectNotFound is provided omap
 // is not found in rados
-func RemoveObject(monitors string, cr *Credentials, poolName, namespace, oMapName string) error {
-	// Command: "rados <options> rm oMapName"
-	args := []string{
-		"-m", monitors,
-		"--id", cr.ID,
-		"--keyfile=" + cr.KeyFile,
-		"-c", CephConfigPath,
-		"-p", poolName,
-		"rm", oMapName,
-	}
-
-	if namespace != "" {
-		args = append(args, "--namespace="+namespace)
-	}
-
-	_, stderr, err := ExecCommand("rados", args[:]...)
+func RemoveObject(monitors string, cr *Credentials, poolName, namespace, objectName string) error {
+	ioCtx, err := NewContextWithPool(monitors, cr.ID, cr.KeyFile, CephConfigPath, poolName, namespace)
 	if err != nil {
-		klog.Errorf("failed removing omap (%s) in pool (%s): (%v)", oMapName, poolName, err)
-		if strings.Contains(string(stderr), "error removing "+poolName+">"+oMapName+
+		klog.Errorf("error creating a new connection with pool %v", err)
+		return err
+	}
+	defer ioCtx.Destroy()
+
+	err = ioCtx.Delete(objectName)
+
+	if err != nil {
+		klog.Errorf("failed removing omap (%s) in pool (%s): (%v)", objectName, poolName, err)
+		if strings.Contains(err.Error(), "error removing "+poolName+">"+objectName+
 			": (2) No such file or directory") {
-			return ErrObjectNotFound{oMapName, err}
+			return ErrObjectNotFound{objectName, err}
 		}
 		return err
 	}
