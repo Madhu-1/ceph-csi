@@ -299,9 +299,9 @@ func waitForrbdImage(backoff wait.Backoff, volOptions *rbdVolume, cr *util.Crede
 	imagePath := fmt.Sprintf("%s/%s", volOptions.Pool, image)
 
 	err := wait.ExponentialBackoff(backoff, func() (bool, error) {
-		used, rbdOutput, err := rbdStatus(volOptions, cr)
+		used, err := rbdStatus(volOptions, cr)
 		if err != nil {
-			return false, fmt.Errorf("fail to check rbd image status with: (%v), rbd output: (%s)", err, rbdOutput)
+			return false, fmt.Errorf("fail to check rbd image status with: (%v)", err)
 		}
 		if (volOptions.DisableInUseChecks) && (used) {
 			klog.V(2).Info("valid multi-node attach requested, ignoring watcher in-use result")

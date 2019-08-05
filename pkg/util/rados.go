@@ -4,7 +4,30 @@ import (
 	"fmt"
 
 	"github.com/ceph/go-ceph/rados"
+	"github.com/ceph/go-ceph/rbd"
 )
+
+// Client configuration
+type Client struct {
+	Monitors   string
+	ID         string
+	KeyFile    string
+	ConfigPath string
+	Pool       string
+	Namespace  string
+}
+
+// NewClient returns the client
+func NewClient(mons, id, keyfile, configpath, pool, namespace string) *Client {
+	return &Client{
+		Monitors:   mons,
+		ID:         id,
+		KeyFile:    keyfile,
+		ConfigPath: configpath,
+		Pool:       pool,
+		Namespace:  namespace,
+	}
+}
 
 func NewConnection(mons, id, key, confPath string) (conn *rados.Conn, err error) {
 	conn, err = rados.NewConn()
@@ -15,7 +38,7 @@ func NewConnection(mons, id, key, confPath string) (conn *rados.Conn, err error)
 	baseArgs := []string{
 		"-m", mons,
 		"--id", id,
-		"--key", key,
+		"--keyfile", key,
 		"-c", confPath,
 	}
 
@@ -28,30 +51,40 @@ func NewConnection(mons, id, key, confPath string) (conn *rados.Conn, err error)
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to Ceph cluster (%v). Connection args (%+v)", err, baseArgs)
 	}
-	err = conn.ReadConfigFile(confPath)
-	if err != nil {
-		return nil, err
-	}
 	return conn, nil
 }
 
-func NewContextWithPool(mons, id, key, confPath, pool, nameSpace string) (*rados.IOContext, error) {
+func NewContextWithPool(mons, id, key, confPath, pool, nameSpace string) (*rados.Conn, *rados.IOContext, error) {
 	conn, err := NewConnection(mons, id, key, confPath)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	ioctx, err := conn.OpenIOContext(pool)
 	if err != nil {
-		return nil, fmt.Errorf("Error creating IO context (%v)", err)
+		conn.Shutdown()
+		return nil, nil, fmt.Errorf("Error creating IO context (%v)", err)
 	}
 
 	if nameSpace != "" {
-		err = ioctx.SetNamespace(nameSpace)
-		if err != nil {
-			ioctx.Destroy()
-			return nil, err
-		}
+		ioctx.SetNamespace(nameSpace)
 	}
-	return ioctx, nil
+	return conn, ioctx, nil
+}
+
+func CreateImage(ioCtx *rados.IOContext, name string, size uint64, imageFormat string) error {
+	// rbd create "${omapprefix}"-vol-"${reqid}" --size ${volsize}
+	// --image-format 2
+
+	_, err := rbd.Create(ioCtx, name, size, 22, rbd.RbdFeatureLayering)
+	if err != nil {
+		return fmt.Errorf("Error creating backing image (%v)", err)
+	}
+	return nil
+}
+
+func GetImage(ioCtx *rados.IOContext, name string) *rbd.Image {
+
+	info := rbd.GetImage(ioCtx, name)
+	return info
 }

@@ -106,24 +106,32 @@ var (
 
 // createImage creates a new ceph image with provision and volume options.
 func createImage(pOpts *rbdVolume, volSz int64, cr *util.Credentials) error {
-	var output []byte
 
 	image := pOpts.RbdImageName
-	volSzMiB := fmt.Sprintf("%dM", volSz)
 
 	if pOpts.ImageFormat == rbdImageFormat2 {
-		klog.V(4).Infof("rbd: create %s size %s format %s (features: %s) using mon %s, pool %s ", image, volSzMiB, pOpts.ImageFormat, pOpts.ImageFeatures, pOpts.Monitors, pOpts.Pool)
+		klog.V(4).Infof("rbd: create %s size %s format %s (features: %s) using mon %s, pool %s ", image, volSz, pOpts.ImageFormat, pOpts.ImageFeatures, pOpts.Monitors, pOpts.Pool)
 	} else {
-		klog.V(4).Infof("rbd: create %s size %s format %s using mon %s, pool %s", image, volSzMiB, pOpts.ImageFormat, pOpts.Monitors, pOpts.Pool)
+		klog.V(4).Infof("rbd: create %s size %s format %s using mon %s, pool %s", image, volSz, pOpts.ImageFormat, pOpts.Monitors, pOpts.Pool)
 	}
-	args := []string{"create", image, "--size", volSzMiB, "--pool", pOpts.Pool, "--id", cr.ID, "-m", pOpts.Monitors, "--keyfile=" + cr.KeyFile, "--image-format", pOpts.ImageFormat}
-	if pOpts.ImageFormat == rbdImageFormat2 {
-		args = append(args, "--image-feature", pOpts.ImageFeatures)
+
+	// if pOpts.ImageFormat == rbdImageFormat2 {
+	// 	args = append(args, "--image-feature", pOpts.ImageFeatures)
+	// }
+
+	//TODO fix namespace access
+	conn, ioCtx, err := util.NewContextWithPool(pOpts.Monitors, cr.ID, cr.KeyFile, util.CephConfigPath, pOpts.Pool, "")
+	if err != nil {
+		klog.Errorf("error creating a new connection with pool %v", err)
+		return err
 	}
-	output, err := execCommand("rbd", args)
+	defer conn.Shutdown()
+	defer ioCtx.Destroy()
+
+	err = util.CreateImage(ioCtx, image, uint64(volSz), pOpts.ImageFormat)
 
 	if err != nil {
-		return errors.Wrapf(err, "failed to create rbd image, command output: %s", string(output))
+		return fmt.Errorf("failed to create rbd image %v", err)
 	}
 
 	return nil
@@ -131,60 +139,79 @@ func createImage(pOpts *rbdVolume, volSz int64, cr *util.Credentials) error {
 
 // rbdStatus checks if there is watcher on the image.
 // It returns true if there is a watcher on the image, otherwise returns false.
-func rbdStatus(pOpts *rbdVolume, cr *util.Credentials) (bool, string, error) {
-	var output string
-	var cmd []byte
+func rbdStatus(pOpts *rbdVolume, cr *util.Credentials) (bool, error) {
+	//	var cmd []byte
 
 	image := pOpts.RbdImageName
 
 	klog.V(4).Infof("rbd: status %s using mon %s, pool %s", image, pOpts.Monitors, pOpts.Pool)
-	args := []string{"status", image, "--pool", pOpts.Pool, "-m", pOpts.Monitors, "--id", cr.ID, "--keyfile=" + cr.KeyFile}
-	cmd, err := execCommand("rbd", args)
-	output = string(cmd)
+	//args := []string{"status", image, "--pool", pOpts.Pool, "-m", pOpts.Monitors, "--id", cr.ID, "--keyfile=" + cr.KeyFile}
 
-	if err, ok := err.(*exec.Error); ok {
-		if err.Err == exec.ErrNotFound {
-			klog.Errorf("rbd cmd not found")
-			// fail fast if command not found
-			return false, output, err
-		}
-	}
-
-	// If command never succeed, returns its last error.
+	conn, ioCtx, err := util.NewContextWithPool(pOpts.Monitors, cr.ID, cr.KeyFile, util.CephConfigPath, pOpts.Pool, "")
 	if err != nil {
-		return false, output, err
+		klog.Errorf("error creating a new connection with pool %v", err)
+		return false, err
+	}
+	defer conn.Shutdown()
+	defer ioCtx.Destroy()
+
+	imageInfo := util.GetImage(ioCtx, image)
+
+	err = imageInfo.Open()
+	if err != nil {
+		return false, fmt.Errorf("Error opening image (%v)", err)
+	}
+	defer imageInfo.Close()
+
+	_, locks, err := imageInfo.ListLockers()
+	if err != nil {
+		return false, fmt.Errorf("Error listing watchers (%v)", err)
 	}
 
-	if strings.Contains(output, imageWatcherStr) {
-		klog.V(4).Infof("rbd: watchers on %s: %s", image, output)
-		return true, output, nil
+	fmt.Println("$$$$$$ locks ", locks)
+	if locks != nil && len(locks) != 0 {
+		return true, nil
 	}
 	klog.Warningf("rbd: no watchers on %s", image)
-	return false, output, nil
+	return false, nil
 }
 
 // deleteImage deletes a ceph image with provision and volume options.
 func deleteImage(pOpts *rbdVolume, cr *util.Credentials) error {
-	var output []byte
+	//	var output []byte
 
-	image := pOpts.RbdImageName
-	found, _, err := rbdStatus(pOpts, cr)
+	imageName := pOpts.RbdImageName
+	found, err := rbdStatus(pOpts, cr)
 	if err != nil {
 		return err
 	}
 	if found {
-		klog.Info("rbd is still being used ", image)
-		return fmt.Errorf("rbd %s is still being used", image)
+		klog.Info("rbd is still being used ", imageName)
+		return fmt.Errorf("rbd %s is still being used", imageName)
 	}
 
-	klog.V(4).Infof("rbd: rm %s using mon %s, pool %s", image, pOpts.Monitors, pOpts.Pool)
-	args := []string{"rm", image, "--pool", pOpts.Pool, "--id", cr.ID, "-m", pOpts.Monitors,
-		"--keyfile=" + cr.KeyFile}
-	output, err = execCommand("rbd", args)
+	klog.V(4).Infof("rbd: rm %s using mon %s, pool %s", imageName, pOpts.Monitors, pOpts.Pool)
+	conn, ioCtx, err := util.NewContextWithPool(pOpts.Monitors, cr.ID, cr.KeyFile, util.CephConfigPath, pOpts.Pool, "")
 	if err != nil {
-		klog.Errorf("failed to delete rbd image: %v, command output: %s", err, string(output))
+		klog.Errorf("error creating a new connection with pool %v", err)
+		return err
 	}
+	defer conn.Shutdown()
+	defer ioCtx.Destroy()
 
+	image := util.GetImage(ioCtx, imageName)
+
+	err = image.Open()
+	if err != nil {
+		return fmt.Errorf("error opening image (%v)", err)
+	}
+	image.Close()
+
+	err = image.Remove()
+	if err != nil {
+		klog.Errorf("error deleting image %v", err)
+		return err
+	}
 	return err
 }
 
@@ -217,14 +244,14 @@ func updateVolWithImageInfo(rbdVol *rbdVolume, cr *util.Credentials) error {
 		return err
 	}
 
-	if imageInfo.Format != 2 {
-		return fmt.Errorf("unknown or unsupported image format (%d) returned for image (%s)",
-			imageInfo.Format, rbdVol.RbdImageName)
-	}
+	// if imageInfo.Format != 2 {
+	// 	return fmt.Errorf("unknown or unsupported image format (%d) returned for image (%s)",
+	// 		imageInfo.Format, rbdVol.RbdImageName)
+	// }
 	rbdVol.ImageFormat = rbdImageFormat2
 
 	rbdVol.VolSize = imageInfo.Size
-	rbdVol.ImageFeatures = strings.Join(imageInfo.Features, ",")
+	//rbdVol.ImageFeatures = strings.Join(imageInfo.Features, ",")
 
 	return nil
 }
@@ -620,30 +647,42 @@ func getImageInfo(monitors string, cr *util.Credentials, poolName, imageName str
 
 	var imgInfo imageInfo
 
-	stdout, stderr, err := util.ExecCommand(
-		"rbd",
-		"-m", monitors,
-		"--id", cr.ID,
-		"--keyfile="+cr.KeyFile,
-		"-c", util.CephConfigPath,
-		"--format="+"json",
-		"info", poolName+"/"+imageName)
+	conn, ioCtx, err := util.NewContextWithPool(monitors, cr.ID, cr.KeyFile, util.CephConfigPath, poolName, "")
 	if err != nil {
-		klog.Errorf("failed getting information for image (%s): (%s)", poolName+"/"+imageName, err)
-		if strings.Contains(string(stderr), "rbd: error opening image "+imageName+
-			": (2) No such file or directory") {
-			return imgInfo, ErrImageNotFound{imageName, err}
-		}
+		klog.Errorf("error creating a new connection with pool %v", err)
 		return imgInfo, err
 	}
 
-	err = json.Unmarshal(stdout, &imgInfo)
+	defer conn.Shutdown()
+	defer ioCtx.Destroy()
+
+	image := util.GetImage(ioCtx, imageName)
+
+	err = image.Open()
 	if err != nil {
-		klog.Errorf("failed to parse JSON output of image info (%s): (%s)",
-			poolName+"/"+imageName, err)
-		return imgInfo, fmt.Errorf("unmarshal failed: %+v.  raw buffer response: %s",
-			err, string(stdout))
+		return imgInfo, fmt.Errorf("Error opening image (%v)", err)
 	}
+	defer image.Close()
+	// if err != nil {
+	// 	klog.Errorf("failed getting information for image (%s): (%s)", poolName+"/"+imageName, err)
+	// 	if strings.Contains(err.Error(), " No such file or directory"){
+	// 		return imgInfo,ErrImageNotFound{imageName, err}
+	// 	}
+	// 	return imgInfo, err
+	// }
+
+	info, err := image.Stat()
+
+	if err != nil {
+		return imgInfo, err
+	}
+	// feature,err:=image.GetFeatures()
+	// if err!=nil{
+	// 	return imgInfo, err
+	// }
+	imgInfo.ObjectUUID = imageName
+	imgInfo.Size = int64(info.Size)
+	//imgInfo.Features=string(featue)
 
 	return imgInfo, nil
 }

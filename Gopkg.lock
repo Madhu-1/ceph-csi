@@ -38,9 +38,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:a7aa2e18c3219c38f929bb4730cfa161905ff7e34bf4a5d16bca66ebc257506c"
+  digest = "1:371dbf7f04fe7ddbcf65b88aef026278e21c9a7df810339bbe94abcf830e0627"
   name = "github.com/ceph/go-ceph"
-  packages = ["rados"]
+  packages = [
+    "rados",
+    "rbd",
+  ]
   pruneopts = "NUT"
   revision = "e32f9f0f2e941422937c0a6c4f0a61b8f0c82995"
 
@@ -464,8 +467,8 @@
     "prometheus/internal",
   ]
   pruneopts = "NUT"
-  revision = "4ab88e80c249ed361d3299e2930427d9ac43ef8d"
-  version = "v1.0.0"
+  revision = "170205fb58decfd011f1550d4cfb737230d7ae4f"
+  version = "v1.1.0"
 
 [[projects]]
   branch = "master"
@@ -588,7 +591,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:816780136a1ee09b3070cdfed092c244010fa3f2bde27beb1b1f80dfef4338e1"
+  digest = "1:fac91f8c6996469de63f537b598f42d79a915488211fdf18111d9955f4d6d68f"
   name = "golang.org/x/sys"
   packages = [
     "cpu",
@@ -596,7 +599,7 @@
     "windows",
   ]
   pruneopts = "NUT"
-  revision = "cbf593c0f2f39034e9104bbf77e2ec7c48c98fc5"
+  revision = "51ab0e2deafac1f46c46ad59cf0921be2f180c3d"
 
 [[projects]]
   digest = "1:0b5dc8c3581fc3ea2b80cc2e360dfb9c2d61dd0cba0d2fe247e8edd3e83f7551"
@@ -666,7 +669,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "NUT"
-  revision = "c506a9f9061087022822e8da603a52fc387115a8"
+  revision = "fa694d86fc64c7654a660f8908de4e879866748d"
 
 [[projects]]
   digest = "1:b5fb6a9fb9d276fe26f303d502e79a7e93afcaae43d05dc95b4993f5b59c6c6a"
@@ -1097,7 +1100,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:dd46fc9a38affca84442cb92686f6d2211cf7a7dfc30a337afcc6f883502ca89"
+  digest = "1:ee858dec8a6688bf0e8286ddbcadf78e4e0fcff82a2489e20306205488a50954"
   name = "k8s.io/cloud-provider"
   packages = [
     ".",
@@ -1106,7 +1109,7 @@
     "volume/helpers",
   ]
   pruneopts = "NUT"
-  revision = "4405817736360488dfda1950e6266d2ff4bcba9e"
+  revision = "3d563629603761e411174e279356983de2f2fadb"
 
 [[projects]]
   branch = "master"
@@ -1125,7 +1128,7 @@
   name = "k8s.io/cri-api"
   packages = ["pkg/apis/runtime/v1alpha2"]
   pruneopts = "NUT"
-  revision = "3baa588ab5670ff6ff8a6fcb4a8ec9234a2346c4"
+  revision = "ba79db1301b40821d3aecf8e92ab4854d7912a00"
 
 [[projects]]
   digest = "1:43099cc4ed575c40f80277c7ba7168df37d0c663bdc4f541325430bd175cce8a"
@@ -1276,7 +1279,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:1541afde648991d68b2579076b29afb2d51a54aec822b434644f60f435eeee6e"
+  digest = "1:9300c13de75a1813f7c386de9aebc7dc49f490bb77369cb9d50af571dd9acf52"
   name = "k8s.io/utils"
   packages = [
     "buffer",
@@ -1292,7 +1295,7 @@
     "trace",
   ]
   pruneopts = "NUT"
-  revision = "3dccf664f023863740c508fb4284e49742bedfa4"
+  revision = "581e00157fb1a0435d4fac54a52d1ca1e481d60e"
 
 [[projects]]
   digest = "1:cb422c75bab66a8339a38b64e837f3b28f3d5a8c06abd7b9048f420363baa18a"
@@ -1338,6 +1341,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/ceph/go-ceph/rados",
+    "github.com/ceph/go-ceph/rbd",
     "github.com/container-storage-interface/spec/lib/go/csi",
     "github.com/golang/protobuf/ptypes",
     "github.com/golang/protobuf/ptypes/timestamp",

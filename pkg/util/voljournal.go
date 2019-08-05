@@ -382,6 +382,7 @@ func (cj *CSIJournal) GetObjectUUIDData(monitors string, cr *Credentials, pool, 
 		return "", "", err
 	}
 
+	fmt.Println("$$$$$$$$$ going to call GetOmapVoalume")
 	// TODO: fetch all omap vals in one call, than make multiple listomapvals
 	requestName, err := GetOMapValue(monitors, cr, pool, cj.namespace,
 		cj.cephUUIDDirectoryPrefix+objectUUID, cj.csiNameKey)

@@ -47,7 +47,7 @@ var (
 	// GitCommit tell the latest git commit image is built from
 	GitCommit string
 	// DriverVersion which will be driver version
-	DriverVersion string
+	DriverVersion string = "canary"
 )
 
 func roundUpSize(volumeSizeBytes, allocationUnitBytes int64) int64 {
