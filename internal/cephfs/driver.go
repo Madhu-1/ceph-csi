@@ -56,7 +56,8 @@ var (
 
 	// volJournal is used to maintain RADOS based journals for CO generated
 	// VolumeName to backing CephFS subvolumes
-	volJournal *journal.Config
+	volJournal  *journal.Config
+	snapJournal *journal.Config
 )
 
 // NewDriver returns new ceph driver
@@ -77,6 +78,7 @@ func NewControllerServer(d *csicommon.CSIDriver, cachePersister util.CachePersis
 		DefaultControllerServer: csicommon.NewDefaultControllerServer(d),
 		MetadataStore:           cachePersister,
 		VolumeLocks:             util.NewVolumeLocks(),
+		SnapshotLocks:           util.NewVolumeLocks(),
 	}
 }
 
@@ -112,6 +114,7 @@ func (fs *Driver) Run(conf *util.Config, cachePersister util.CachePersister) {
 	// Create an instance of the volume journal
 	volJournal = journal.NewCSIVolumeJournalWithNamespace(CSIInstanceID, radosNamespace)
 
+	snapJournal = journal.NewCSISnapshotJournalWithNamespace(CSIInstanceID, radosNamespace)
 	// Initialize default library driver
 
 	fs.cd = csicommon.NewCSIDriver(conf.DriverName, util.DriverVersion, conf.NodeID)
@@ -122,7 +125,9 @@ func (fs *Driver) Run(conf *util.Config, cachePersister util.CachePersister) {
 	if conf.IsControllerServer || !conf.IsNodeServer {
 		fs.cd.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{
 			csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME,
+			csi.ControllerServiceCapability_RPC_CREATE_DELETE_SNAPSHOT,
 			csi.ControllerServiceCapability_RPC_EXPAND_VOLUME,
+			csi.ControllerServiceCapability_RPC_CLONE_VOLUME,
 		})
 
 		fs.cd.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{
