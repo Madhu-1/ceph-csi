@@ -67,14 +67,7 @@ func (cs *ControllerServer) createBackingVolume(ctx context.Context, req *csi.Cr
 		volumeSource := req.VolumeContentSource
 		switch volumeSource.Type.(type) {
 		case *csi.VolumeContentSource_Snapshot:
-			snapshot := req.VolumeContentSource.GetSnapshot()
-			if snapshot == nil {
-				return status.Error(codes.NotFound, "volume Snapshot cannot be empty")
-			}
-			snapshotID := snapshot.GetSnapshotId()
-			if snapshotID == "" {
-				return status.Errorf(codes.NotFound, "volume Snapshot ID cannot be empty")
-			}
+			snapshotID := req.VolumeContentSource.GetSnapshot().GetSnapshotId()
 			var snof util.ErrSnapNotFound
 			snapOpt, sid, err := newSnapshotOptionsFromID(ctx, snapshotID, cr)
 			if err != nil {
@@ -120,15 +113,8 @@ func (cs *ControllerServer) createBackingVolume(ctx context.Context, req *csi.Cr
 			}
 			return nil
 		case *csi.VolumeContentSource_Volume:
-			vol := req.VolumeContentSource.GetVolume()
-			if vol == nil {
-				return status.Error(codes.NotFound, "volume cannot be empty")
-			}
-			volID := vol.GetVolumeId()
-			if volID == "" {
-				return status.Errorf(codes.NotFound, "volume ID cannot be empty")
-			}
 			// Find the volume using the provided VolumeID
+			volID := req.VolumeContentSource.GetVolume().GetVolumeId()
 			_, pvID, err := newVolumeOptionsFromVolID(ctx, string(volID), nil, req.Secrets)
 			if err != nil {
 				var evnf ErrVolumeNotFound
