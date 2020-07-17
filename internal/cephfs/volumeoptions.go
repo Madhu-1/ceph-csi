@@ -35,7 +35,6 @@ type volumeOptions struct {
 	RequestName         string
 	NamePrefix          string
 	Size                int64
-	SnapshotName        string
 	ClusterID           string
 	FsName              string
 	FscID               int64
@@ -48,6 +47,19 @@ type volumeOptions struct {
 	KernelMountOptions  string `json:"kernelMountOptions"`
 	FuseMountOptions    string `json:"fuseMountOptions"`
 	SubvolumeGroup      string
+}
+
+type snapshotOptions struct {
+	RequestName    string
+	NamePrefix     string
+	Size           int64
+	ClusterID      string
+	FsName         string
+	FscID          int64
+	MetadataPool   string
+	Monitors       string
+	Pool           string
+	SubvolumeGroup string
 }
 
 func validateNonEmptyField(field, fieldName string) error {
@@ -464,11 +476,11 @@ func newSnapshotOptionsFromID(ctx context.Context, snapID string, cr *util.Crede
 		return nil, nil, err
 	}
 	volOptions.RequestName = imageAttributes.RequestName
-	volOptions.SnapshotName = imageAttributes.ImageName
+	sid.FsSnapshotName = imageAttributes.ImageName
 	sid.FsSubVolumeName = imageAttributes.SourceName
 
 	fmt.Printf("the image attributres stored on for the snapshots are %+v\n", imageAttributes)
-	_, err = getSnapshotInfo(ctx, &volOptions, cr, volumeID(sid.FsSubVolumeName))
+	_, err = getSnapshotInfo(ctx, &volOptions, cr, volumeID(sid.FsSnapshotName), volumeID(sid.FsSubVolumeName))
 	if err != nil {
 		return &volOptions, &sid, err
 	}

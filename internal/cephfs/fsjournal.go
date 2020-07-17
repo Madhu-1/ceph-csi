@@ -25,6 +25,7 @@ import (
 	"github.com/ceph/ceph-csi/internal/util"
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -41,6 +42,7 @@ type volumeIdentifier struct {
 type snapshotIdentifier struct {
 	FsSnapshotName  string
 	SnapshotID      string
+	CreationTime    *timestamp.Timestamp
 	FsSubVolumeName string
 }
 
@@ -83,7 +85,17 @@ func checkVolExists(ctx context.Context, volOptions *volumeOptions, req *csi.Cre
 	}
 	imageUUID := imageData.ImageUUID
 	vid.FsSubvolName = imageData.ImageAttributes.ImageName
+	var evnf ErrVolumeNotFound
 
+	_, err = getVolumeRootPathCeph(ctx, volOptions, cr, volumeID(vid.FsSubvolName))
+	if err != nil {
+		if errors.As(err, &evnf) && req.VolumeContentSource != nil {
+			err = j.UndoReservation(ctx, volOptions.MetadataPool,
+				volOptions.MetadataPool, vid.FsSubvolName, volOptions.RequestName)
+			return nil, err
+		}
+		return nil, err
+	}
 	// check if topology constraints match what is found
 	// TODO: we need an API to fetch subvolume attributes (size/datapool and others), based
 	// on which we can evaluate which topology this belongs to.
@@ -104,18 +116,14 @@ func checkVolExists(ctx context.Context, volOptions *volumeOptions, req *csi.Cre
 		volumeSource := req.VolumeContentSource
 		switch volumeSource.Type.(type) {
 		case *csi.VolumeContentSource_Snapshot:
-			snapshot := req.VolumeContentSource.GetSnapshot()
-			if snapshot == nil {
-				return nil, status.Error(codes.NotFound, "volume Snapshot cannot be empty")
-			}
-			snapshotID := snapshot.GetSnapshotId()
-			if snapshotID == "" {
-				return nil, status.Errorf(codes.NotFound, "volume Snapshot ID cannot be empty")
-			}
 			var clone = CloneStatus{}
-			// TODO check
 			clone, err = getcloneInfo(ctx, volOptions, cr, volumeID(vid.FsSubvolName))
 			if err != nil {
+				if errors.As(err, &evnf) {
+					err = j.UndoReservation(ctx, volOptions.MetadataPool,
+						volOptions.MetadataPool, vid.FsSubvolName, volOptions.RequestName)
+					return nil, err
+				}
 				return nil, status.Error(codes.Internal, err.Error())
 			}
 			if clone.Status.State != "complete" {
@@ -129,26 +137,26 @@ func checkVolExists(ctx context.Context, volOptions *volumeOptions, req *csi.Cre
 
 			}
 		case *csi.VolumeContentSource_Volume:
-			vol := req.VolumeContentSource.GetVolume()
-			if vol == nil {
-				return nil, status.Error(codes.NotFound, "volume cannot be empty")
-			}
-			volID := vol.GetVolumeId()
-			if volID == "" {
-				return nil, status.Errorf(codes.NotFound, "volume ID cannot be empty")
-			}
+			volID := req.VolumeContentSource.GetVolume().GetVolumeId()
 			// Find the volume using the provided VolumeID
 			_, pvID, err := newVolumeOptionsFromVolID(ctx, string(volID), nil, req.Secrets)
 			if err != nil {
-				var evnf ErrVolumeNotFound
-				if !errors.As(err, &evnf) {
-					return nil, status.Error(codes.NotFound, err.Error())
+				if errors.As(err, &evnf) {
+					if errors.As(err, &evnf) {
+						err = j.UndoReservation(ctx, volOptions.MetadataPool,
+							volOptions.MetadataPool, vid.FsSubvolName, volOptions.RequestName)
+						return nil, err
+					}
 				}
 				return nil, status.Error(codes.Internal, err.Error())
 			}
 			err = checkCloneFromSubvolumeExists(ctx, volumeID(pvID.FsSubvolName), volumeID(vid.FsSubvolName), volOptions, cr)
 			if err != nil {
-				return nil, err
+				if errors.As(err, &evnf) {
+					err = j.UndoReservation(ctx, volOptions.MetadataPool,
+						volOptions.MetadataPool, vid.FsSubvolName, volOptions.RequestName)
+					return nil, err
+				}
 			}
 		default:
 			return nil, status.Error(codes.InvalidArgument, "not a proper volume source")
@@ -314,9 +322,7 @@ because, the order of omap creation and deletion are inverse of each other, and 
 request name lock, and hence any stale omaps are leftovers from incomplete transactions and are
 hence safe to garbage collect.
 */
-func checkSnapExists(ctx context.Context, volOptions *volumeOptions, parentSubVolName string, secret map[string]string) (*snapshotInfo, error) {
-	snap := &snapshotInfo{}
-
+func checkSnapExists(ctx context.Context, volOptions *volumeOptions, parentSubVolName string, secret map[string]string) (*snapshotIdentifier, error) {
 	cr, err := util.NewAdminCredentials(secret)
 	if err != nil {
 		return nil, err
@@ -337,15 +343,15 @@ func checkSnapExists(ctx context.Context, volOptions *volumeOptions, parentSubVo
 	if snapData == nil {
 		return nil, nil
 	}
+	sid := &snapshotIdentifier{}
 	snapUUID := snapData.ImageUUID
-	snap.Name = snapData.ImageAttributes.ImageName
-	volOptions.SnapshotName = snap.Name
-	snapInfo, err := getSnapshotInfo(ctx, volOptions, cr, volumeID(parentSubVolName))
+	snapID := snapData.ImageAttributes.ImageName
+	snapInfo, err := getSnapshotInfo(ctx, volOptions, cr, volumeID(snapID), volumeID(parentSubVolName))
 	if err != nil {
 		var evnf util.ErrSnapNotFound
 		if errors.As(err, &evnf) {
 			err = j.UndoReservation(ctx, volOptions.MetadataPool,
-				volOptions.MetadataPool, snap.Name, volOptions.RequestName)
+				volOptions.MetadataPool, snapID, volOptions.RequestName)
 			return nil, err
 		}
 		return nil, err
@@ -358,24 +364,23 @@ func checkSnapExists(ctx context.Context, volOptions *volumeOptions, parentSubVo
 	if err != nil {
 		return nil, err
 	}
-	snapInfo.CreationTime, err = ptypes.TimestampProto(tm)
+	sid.CreationTime, err = ptypes.TimestampProto(tm)
 	if err != nil {
 		return nil, err
 	}
 	// check snapshot is protected
-	err = protectSnapshot(ctx, volOptions, cr, volumeID(parentSubVolName))
+	err = protectSnapshot(ctx, volOptions, cr, volumeID(snapID), volumeID(parentSubVolName))
 	if err != nil {
 		return nil, err
 	}
 	// found a snapshot already available, process and return it!
-	snapInfo.ID, err = util.GenerateVolID(ctx, volOptions.Monitors, cr, volOptions.FscID,
+	sid.SnapshotID, err = util.GenerateVolID(ctx, volOptions.Monitors, cr, volOptions.FscID,
 		"", volOptions.ClusterID, snapUUID, volIDVersion)
 	if err != nil {
 		return nil, err
 	}
-
 	klog.V(4).Infof(util.Log(ctx, "Found existing snapshot (%s) with subvolume name (%s) for request (%s)"),
-		snapInfo.Name, parentSubVolName, volOptions.RequestName)
+		snapData.ImageAttributes.RequestName, parentSubVolName, volOptions.RequestName)
 
-	return &snapInfo, nil
+	return sid, nil
 }

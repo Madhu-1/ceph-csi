@@ -39,7 +39,7 @@ func snapshotNotProtectedErrorString(snapName string) string {
 	return fmt.Sprintf("Error EEXIST: snapshot '%s' is not protected", snapName)
 }
 
-func createSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID volumeID) error {
+func createSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, snapID, volID volumeID) error {
 	args := []string{
 		"fs",
 		"subvolume",
@@ -47,7 +47,7 @@ func createSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Cre
 		"create",
 		volOptions.FsName,
 		string(volID),
-		volOptions.SnapshotName,
+		string(snapID),
 		"--group_name",
 		volOptions.SubvolumeGroup,
 		"-m", volOptions.Monitors,
@@ -61,13 +61,13 @@ func createSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Cre
 		"ceph",
 		args[:]...)
 	if err != nil {
-		klog.Errorf(util.Log(ctx, "failed to create subvolume snapshot %s %s(%s) in fs %s"), volOptions.SnapshotName, string(volID), err, volOptions.FsName)
+		klog.Errorf(util.Log(ctx, "failed to create subvolume snapshot %s %s(%s) in fs %s"), string(snapID), string(volID), err, volOptions.FsName)
 		return err
 	}
 	return nil
 }
 
-func deleteSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID volumeID) error {
+func deleteSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, snapID, volID volumeID) error {
 	args := []string{
 		"fs",
 		"subvolume",
@@ -75,7 +75,7 @@ func deleteSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Cre
 		"rm",
 		volOptions.FsName,
 		string(volID),
-		volOptions.SnapshotName,
+		string(snapID),
 		"--group_name",
 		volOptions.SubvolumeGroup,
 		"-m", volOptions.Monitors,
@@ -90,7 +90,7 @@ func deleteSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Cre
 		"ceph",
 		args[:]...)
 	if err != nil {
-		klog.Errorf(util.Log(ctx, "failed to delete subvolume snapshot %s %s(%s) in fs %s"), volOptions.SnapshotName, string(volID), err, volOptions.FsName)
+		klog.Errorf(util.Log(ctx, "failed to delete subvolume snapshot %s %s(%s) in fs %s"), string(snapID), string(volID), err, volOptions.FsName)
 		return err
 	}
 	return nil
@@ -99,15 +99,13 @@ func deleteSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Cre
 type snapshotInfo struct {
 	CreatedAt        string `json:"created_at"`
 	CreationTime     *timestamp.Timestamp
-	ID               string
-	Name             string
 	DataPool         string `json:"data_pool"`
 	HasPendingClones string `json:"has_pending_clones"`
 	Protected        string `json:"protected"`
 	Size             int    `json:"size"`
 }
 
-func getSnapshotInfo(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID volumeID) (snapshotInfo, error) {
+func getSnapshotInfo(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, snapID, volID volumeID) (snapshotInfo, error) {
 	snap := snapshotInfo{}
 	args := []string{
 		"fs",
@@ -116,7 +114,7 @@ func getSnapshotInfo(ctx context.Context, volOptions *volumeOptions, cr *util.Cr
 		"info",
 		volOptions.FsName,
 		string(volID),
-		volOptions.SnapshotName,
+		string(snapID),
 		"--group_name",
 		volOptions.SubvolumeGroup,
 		"-m", volOptions.Monitors,
@@ -131,16 +129,16 @@ func getSnapshotInfo(ctx context.Context, volOptions *volumeOptions, cr *util.Cr
 		"ceph",
 		args[:]...)
 	if err != nil {
-		if strings.Contains(err.Error(), snapshotNotFoundErrorString(volOptions.SnapshotName)) {
-			return snapshotInfo{}, util.ErrSnapNotFound{SnapName: volOptions.SnapshotName, Err: err}
+		if strings.Contains(err.Error(), snapshotNotFoundErrorString(string(snapID))) {
+			return snapshotInfo{}, util.ErrSnapNotFound{SnapName: string(snapID), Err: err}
 		}
-		klog.Errorf(util.Log(ctx, "failed to get subvolume snapshot info %s %s(%s) in fs %s"), volOptions.SnapshotName, string(volID), err, volOptions.FsName)
+		klog.Errorf(util.Log(ctx, "failed to get subvolume snapshot info %s %s(%s) in fs %s"), string(snapID), string(volID), err, volOptions.FsName)
 		return snapshotInfo{}, err
 	}
 	return snap, nil
 }
 
-func protectSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID volumeID) error {
+func protectSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, snapID, volID volumeID) error {
 	args := []string{
 		"fs",
 		"subvolume",
@@ -148,7 +146,7 @@ func protectSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Cr
 		"protect",
 		volOptions.FsName,
 		string(volID),
-		volOptions.SnapshotName,
+		string(snapID),
 		"--group_name",
 		volOptions.SubvolumeGroup,
 		"-m", volOptions.Monitors,
@@ -162,16 +160,16 @@ func protectSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Cr
 		"ceph",
 		args[:]...)
 	if err != nil {
-		if strings.Contains(err.Error(), snapshotAlreadyProtectedErrorString(volOptions.SnapshotName)) {
+		if strings.Contains(err.Error(), snapshotAlreadyProtectedErrorString(string(snapID))) {
 			return nil
 		}
-		klog.Errorf(util.Log(ctx, "failed to protect subvolume snapshot %s %s(%s) in fs %s"), volOptions.SnapshotName, string(volID), err, volOptions.FsName)
+		klog.Errorf(util.Log(ctx, "failed to protect subvolume snapshot %s %s(%s) in fs %s"), string(snapID), string(volID), err, volOptions.FsName)
 		return err
 	}
 	return nil
 }
 
-func unprotectSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID volumeID) error {
+func unprotectSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, snapID, volID volumeID) error {
 	args := []string{
 		"fs",
 		"subvolume",
@@ -179,7 +177,7 @@ func unprotectSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.
 		"unprotect",
 		volOptions.FsName,
 		string(volID),
-		volOptions.SnapshotName,
+		string(snapID),
 		"--group_name",
 		volOptions.SubvolumeGroup,
 		"-m", volOptions.Monitors,
@@ -193,37 +191,37 @@ func unprotectSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.
 		"ceph",
 		args[:]...)
 	if err != nil {
-		if strings.Contains(err.Error(), snapshotNotProtectedErrorString(volOptions.SnapshotName)) {
+		if strings.Contains(err.Error(), snapshotNotProtectedErrorString(string(snapID))) {
 			return nil
 		}
-		klog.Errorf(util.Log(ctx, "failed to unprotect subvolume snapshot %s %s(%s) in fs %s"), volOptions.SnapshotName, string(volID), err, volOptions.FsName)
+		klog.Errorf(util.Log(ctx, "failed to unprotect subvolume snapshot %s %s(%s) in fs %s"), string(snapID), string(volID), err, volOptions.FsName)
 		return err
 	}
 	return nil
 }
 
-func cloneSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID, cloneID volumeID) error {
+func cloneSnapshot(ctx context.Context, parentVolOptions *volumeOptions, cr *util.Credentials, volID, snapID, cloneID volumeID, cloneVolOptions *volumeOptions) error {
 	args := []string{
 		"fs",
 		"subvolume",
 		"snapshot",
 		"clone",
-		volOptions.FsName,
+		parentVolOptions.FsName,
 		string(volID),
-		volOptions.SnapshotName,
+		string(snapID),
 		string(cloneID),
 		"--group_name",
-		volOptions.SubvolumeGroup,
+		parentVolOptions.SubvolumeGroup,
 		"--target_group_name",
-		volOptions.SubvolumeGroup,
-		"-m", volOptions.Monitors,
+		cloneVolOptions.SubvolumeGroup,
+		"-m", parentVolOptions.Monitors,
 		"-c", util.CephConfigPath,
 		"-n", cephEntityClientPrefix + cr.ID,
 		"--keyfile=" + cr.KeyFile,
 	}
 
-	if volOptions.Pool != "" {
-		args = append(args, "--pool_layout", volOptions.Pool)
+	if cloneVolOptions.Pool != "" {
+		args = append(args, "--pool_layout", cloneVolOptions.Pool)
 	}
 
 	err := execCommandErr(
@@ -231,50 +229,10 @@ func cloneSnapshot(ctx context.Context, volOptions *volumeOptions, cr *util.Cred
 		"ceph",
 		args[:]...)
 	if err != nil {
-		klog.Errorf(util.Log(ctx, "failed to clone subvolume snapshot %s %s(%s) in fs %s"), string(cloneID), string(volID), err, volOptions.FsName)
+		klog.Errorf(util.Log(ctx, "failed to clone subvolume snapshot %s %s(%s) in fs %s"), string(cloneID), string(volID), err, parentVolOptions.FsName)
 		return err
 	}
 	return nil
-}
-
-type cloneStatus struct {
-	Status struct {
-		State string `json:"state"`
-	} `json:"status"`
-}
-
-func getCloneStatus(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID, cloneID volumeID) (cloneStatus, error) {
-	var status cloneStatus
-	args := []string{
-		"fs",
-		"clone",
-		"status",
-		volOptions.FsName,
-		string(volID),
-		volOptions.SnapshotName,
-		string(cloneID),
-		"--group_name",
-		volOptions.SubvolumeGroup,
-		"-m", volOptions.Monitors,
-		"-c", util.CephConfigPath,
-		"-n", cephEntityClientPrefix + cr.ID,
-		"--keyfile=" + cr.KeyFile,
-	}
-
-	err := execCommandJSON(
-		ctx,
-		&status,
-		"ceph",
-		args[:]...)
-	if err != nil {
-		if strings.Contains(err.Error(), getVolumeNotFoundErrorString(volID)) {
-			return status, ErrVolumeNotFound{err}
-		}
-
-		klog.Errorf(util.Log(ctx, "failed to clone subvolume snapshot %s %s(%s) in fs %s"), string(cloneID), string(volID), err, volOptions.FsName)
-		return status, err
-	}
-	return status, nil
 }
 
 type CloneStatus struct {
