@@ -102,6 +102,13 @@ func getVolumeRootPathCeph(ctx context.Context, volOptions *volumeOptions, cr *u
 }
 
 func getSubVolumeInfo(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID volumeID) (Subvolume, error) {
+	// keyPresent checks whether corresponding clusterID key is present in clusterAdditionalInfo
+	var keyPresent bool
+	// verify if corresponding ClusterID key is present in the map,
+	// and if not, initialize with default values(false).
+	if _, keyPresent = clusterAdditionalInfo[volOptions.ClusterID]; !keyPresent {
+		clusterAdditionalInfo[volOptions.ClusterID] = &localClusterState{}
+	}
 	info := Subvolume{}
 	err := execCommandJSON(
 		ctx,
@@ -131,6 +138,7 @@ func getSubVolumeInfo(ctx context.Context, volOptions *volumeOptions, cr *util.C
 
 		return info, err
 	}
+	clusterAdditionalInfo[volOptions.ClusterID].resizeSupported = true
 	return info, nil
 }
 
@@ -140,6 +148,8 @@ type localClusterState struct {
 	// set true once a subvolumegroup is created
 	// for corresponding cluster.
 	subVolumeGroupCreated bool
+	// set true if cluster supports subvolume info command.
+	subVolumeInfo bool
 }
 
 func createVolume(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID volumeID, bytesQuota int64) error {

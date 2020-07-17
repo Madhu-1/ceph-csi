@@ -25,9 +25,9 @@ import (
 	"k8s.io/klog"
 )
 
-func createCloneFromSubvolume(ctx context.Context, volID, cloneID volumeID, volOpt *volumeOptions, cr *util.Credentials) error {
+func createCloneFromSubvolume(ctx context.Context, volID, cloneID volumeID, volOpt, parentvolOpt *volumeOptions, cr *util.Credentials) error {
 	snapshotID := cloneID
-	err := createSnapshot(ctx, volOpt, cr, snapshotID, volID)
+	err := createSnapshot(ctx, parentvolOpt, cr, snapshotID, volID)
 	if err != nil {
 		klog.Errorf(util.Log(ctx, "failed to create snapshot %s %v"), snapshotID, err)
 		return err
@@ -38,17 +38,17 @@ func createCloneFromSubvolume(ctx context.Context, volID, cloneID volumeID, volO
 	)
 	defer func() {
 		if protectErr != nil {
-			dErr := deleteSnapshot(ctx, volOpt, cr, snapshotID, volID)
+			dErr := deleteSnapshot(ctx, parentvolOpt, cr, snapshotID, volID)
 			if dErr != nil {
 				klog.Errorf(util.Log(ctx, "failed to delete snapshot %s %v"), snapshotID, err)
 			}
 		}
 
 		if cloneErr != nil {
-			if err = unprotectSnapshot(ctx, volOpt, cr, snapshotID, volID); err != nil {
+			if err = unprotectSnapshot(ctx, parentvolOpt, cr, snapshotID, volID); err != nil {
 				klog.Errorf(util.Log(ctx, "failed to unprotect snapshot %s %v"), snapshotID, err)
 			}
-			if dSnap := deleteSnapshot(ctx, volOpt, cr, snapshotID, volID); dSnap != nil {
+			if dSnap := deleteSnapshot(ctx, parentvolOpt, cr, snapshotID, volID); dSnap != nil {
 				klog.Errorf(util.Log(ctx, "failed to delete snapshot %s %v"), snapshotID, err)
 			}
 			if dErr := purgeVolume(ctx, cloneID, cr, volOpt); dErr != nil {
@@ -56,17 +56,13 @@ func createCloneFromSubvolume(ctx context.Context, volID, cloneID volumeID, volO
 			}
 		}
 	}()
-	protectErr = protectSnapshot(ctx, volOpt, cr, snapshotID, volID)
+	protectErr = protectSnapshot(ctx, parentvolOpt, cr, snapshotID, volID)
 	if protectErr != nil {
 		klog.Errorf(util.Log(ctx, "failed to protect snapshot %s %v"), snapshotID, protectErr)
 		return protectErr
 	}
 
-	// TODO Support cloning into different grout
-	cloneVolOpt := &volumeOptions{}
-	cloneVolOpt.SubvolumeGroup = volOpt.SubvolumeGroup
-	cloneVolOpt.Pool = volOpt.Pool
-	protectErr = cloneSnapshot(ctx, volOpt, cr, volID, snapshotID, cloneID, cloneVolOpt)
+	protectErr = cloneSnapshot(ctx, parentvolOpt, cr, volID, snapshotID, cloneID, volOpt)
 	if protectErr != nil {
 		klog.Errorf(util.Log(ctx, "failed to clone snapshot %s %s to %s %v"), volID, snapshotID, cloneID, cloneErr)
 		return protectErr
@@ -87,12 +83,12 @@ func createCloneFromSubvolume(ctx context.Context, volID, cloneID volumeID, volO
 
 	}
 
-	cloneErr = unprotectSnapshot(ctx, volOpt, cr, snapshotID, volID)
+	cloneErr = unprotectSnapshot(ctx, parentvolOpt, cr, snapshotID, volID)
 	if cloneErr != nil {
 		klog.Errorf(util.Log(ctx, "failed to unprotect snapshot %s %v"), snapshotID, cloneErr)
 		return cloneErr
 	}
-	cloneErr = deleteSnapshot(ctx, volOpt, cr, snapshotID, volID)
+	cloneErr = deleteSnapshot(ctx, parentvolOpt, cr, snapshotID, volID)
 	if cloneErr != nil {
 		klog.Errorf(util.Log(ctx, "failed to delete snapshot %s %v"), snapshotID, cloneErr)
 		return cloneErr
@@ -100,7 +96,7 @@ func createCloneFromSubvolume(ctx context.Context, volID, cloneID volumeID, volO
 	return nil
 }
 
-func checkCloneFromSubvolumeExists(ctx context.Context, volID, cloneID volumeID, volOpt *volumeOptions, cr *util.Credentials) error {
+func checkCloneFromSubvolumeExists(ctx context.Context, volID, cloneID volumeID, volOpt, parentVolOpt *volumeOptions, cr *util.Credentials) error {
 	snapShotID := cloneID
 	// check clone exists
 	_, err := getVolumeRootPathCeph(ctx, volOpt, cr, cloneID)
@@ -125,7 +121,7 @@ func checkCloneFromSubvolumeExists(ctx context.Context, volID, cloneID volumeID,
 		return err
 
 	}
-	_, err = getSnapshotInfo(ctx, volOpt, cr, snapShotID, volID)
+	_, err = getSnapshotInfo(ctx, parentVolOpt, cr, snapShotID, volID)
 	if err != nil {
 		var evnf util.ErrSnapNotFound
 		if errors.As(err, &evnf) {
@@ -133,12 +129,12 @@ func checkCloneFromSubvolumeExists(ctx context.Context, volID, cloneID volumeID,
 		}
 		return err
 	}
-	err = unprotectSnapshot(ctx, volOpt, cr, snapShotID, volID)
+	err = unprotectSnapshot(ctx, parentVolOpt, cr, snapShotID, volID)
 	if err != nil {
 		klog.Errorf(util.Log(ctx, "failed to unprotect snapshot %s %v"), snapShotID, err)
 		return err
 	}
-	err = deleteSnapshot(ctx, volOpt, cr, snapShotID, volID)
+	err = deleteSnapshot(ctx, parentVolOpt, cr, snapShotID, volID)
 	if err != nil {
 		klog.Errorf(util.Log(ctx, "failed to delete snapshot %s %v"), snapShotID, err)
 		return err
