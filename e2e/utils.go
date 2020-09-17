@@ -410,6 +410,73 @@ func checkDataPersist(pvcPath, appPath string, f *framework.Framework) error {
 	return err
 }
 
+func validateMetroDR(pvcPath, appPath string, cephfs bool, f *framework.Framework) error {
+	totalPVCCount := 1
+	pvc, err := loadPVC(pvcPath)
+	if err != nil {
+		return fmt.Errorf("failed to load application with error %v", err)
+	}
+	pvc.Namespace = f.UniqueName
+
+	err = createPVCAndvalidatePV(f.ClientSet, pvc, deployTimeout)
+	if err != nil {
+		return fmt.Errorf("failed to create PVC with error %v", err)
+	}
+	if cephfs {
+		validateSubvolumeCount(f, totalPVCCount, fileSystemName, subvolumegroup)
+	} else {
+		validateRBDImageCount(f, totalPVCCount)
+	}
+	claim, err := f.ClientSet.CoreV1().PersistentVolumeClaims(pvc.Namespace).Get(context.TODO(), pvc.Name, metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to get PVC with error %v", err)
+	}
+	// Get the bound PV
+	pv, err := f.ClientSet.CoreV1().PersistentVolumes().Get(context.TODO(), claim.Spec.VolumeName, metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to get PV with error %v", err)
+	}
+	// update the reclaim policy so that backend image/subvolume should not be deleted
+	pv.Spec.PersistentVolumeReclaimPolicy = v1.PersistentVolumeReclaimRetain
+	_, err = f.ClientSet.CoreV1().PersistentVolumes().Update(context.TODO(), pv, metav1.UpdateOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to update PV with error %v", err)
+	}
+	// delete pvc and pv
+	err = deletePVCAndValidatePV(f.ClientSet, pvc, deployTimeout)
+	if err != nil {
+		return fmt.Errorf("failed to delete PVC with error %v", err)
+	}
+	if cephfs {
+		validateSubvolumeCount(f, totalPVCCount, fileSystemName, subvolumegroup)
+	} else {
+		validateRBDImageCount(f, totalPVCCount)
+	}
+
+	app, err := loadApp(appPath)
+	if err != nil {
+		return fmt.Errorf("failed to load application with error %v", err)
+	}
+
+	app.Namespace = f.UniqueName
+	app.Spec.Volumes[0].PersistentVolumeClaim.ClaimName = pvc.Name
+	err = writeDataInPod(app, f)
+	if err != nil {
+		return fmt.Errorf("failed to write data with error %v", err)
+	}
+
+	err = deletePVCAndValidatePV(f.ClientSet, pvc, deployTimeout)
+	if err != nil {
+		return fmt.Errorf("failed to delete PVC with error %v", err)
+	}
+	if cephfs {
+		validateSubvolumeCount(f, 0, fileSystemName, subvolumegroup)
+	} else {
+		validateRBDImageCount(f, 0)
+	}
+	return nil
+}
+
 func pvcDeleteWhenPoolNotFound(pvcPath string, cephfs bool, f *framework.Framework) error {
 	pvc, err := loadPVC(pvcPath)
 	if err != nil {

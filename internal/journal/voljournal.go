@@ -22,6 +22,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/ceph/ceph-csi/internal/util"
@@ -106,8 +107,10 @@ single entity modifying the related omaps for a given VolName.
 */
 
 const (
-	defaultVolumeNamingPrefix   string = "csi-vol-"
-	defaultSnapshotNamingPrefix string = "csi-snap-"
+	// DefaultVolumeNamingPrefix for appending to the volume name
+	DefaultVolumeNamingPrefix string = "csi-vol-"
+	// DefaultVolumeNamingPrefix for appending to the snapshot name
+	DefaultSnapshotNamingPrefix string = "csi-snap-"
 )
 
 // CSIJournal defines the interface and the required key names for the above RADOS based OMaps.
@@ -206,9 +209,9 @@ func NewCSISnapshotJournalWithNamespace(suffix, ns string) *Config {
 func (cj *Config) GetNameForUUID(prefix, uid string, isSnapshot bool) string {
 	if prefix == "" {
 		if isSnapshot {
-			prefix = defaultSnapshotNamingPrefix
+			prefix = DefaultSnapshotNamingPrefix
 		} else {
-			prefix = defaultVolumeNamingPrefix
+			prefix = DefaultVolumeNamingPrefix
 		}
 	}
 	return prefix + uid
@@ -512,6 +515,7 @@ func (conn *Connection) ReserveName(ctx context.Context,
 	// NOTE: If any service loss occurs post creation of the UUID directory, and before
 	// setting the request name key (csiNameKey) to point back to the UUID directory, the
 	// UUID directory key will be leaked
+
 	volUUID, err := reserveOMapName(ctx, conn.monitors, conn.cr, imagePool, cj.namespace, cj.cephUUIDDirectoryPrefix)
 	if err != nil {
 		return "", "", err
@@ -593,6 +597,20 @@ type ImageAttributes struct {
 	JournalPoolID int64  // Pool ID of the CSI journal pool, stored in big endian format (on-disk data)
 }
 
+// IsEmpty check the ImageAttributes is empty or not.
+func (i *ImageAttributes) IsEmpty() bool {
+	return reflect.DeepEqual(i, ImageAttributes{})
+}
+
+// GenerateName generates the name based on the prefix,name and namespace.
+func GenerateName(prefix, name, nameSpace string, snap bool) string {
+	n := prefix + name + "-" + nameSpace + "-"
+	if snap {
+		return DefaultSnapshotNamingPrefix + n
+	}
+	return DefaultVolumeNamingPrefix + n
+}
+
 // GetImageAttributes fetches all keys and their values, from a UUID directory, returning ImageAttributes structure.
 func (conn *Connection) GetImageAttributes(ctx context.Context, pool, objectUUID string, snapSource bool) (*ImageAttributes, error) {
 	var (
@@ -614,6 +632,7 @@ func (conn *Connection) GetImageAttributes(ctx context.Context, pool, objectUUID
 		cj.cephSnapSourceKey,
 		cj.csiImageIDKey,
 	}
+
 	values, err := getOMapValues(
 		ctx, conn, pool, cj.namespace, cj.cephUUIDDirectoryPrefix+objectUUID,
 		cj.commonPrefix, fetchKeys)
@@ -635,9 +654,9 @@ func (conn *Connection) GetImageAttributes(ctx context.Context, pool, objectUUID
 	if !found {
 		// if the key was not found, assume the default key + UUID
 		if snapSource {
-			imageAttributes.ImageName = defaultSnapshotNamingPrefix + objectUUID
+			imageAttributes.ImageName = DefaultSnapshotNamingPrefix + objectUUID
 		} else {
-			imageAttributes.ImageName = defaultVolumeNamingPrefix + objectUUID
+			imageAttributes.ImageName = DefaultVolumeNamingPrefix + objectUUID
 		}
 	}
 

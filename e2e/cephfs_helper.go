@@ -34,7 +34,7 @@ func validateSubvolumegroup(f *framework.Framework, subvolgrp string) error {
 	return nil
 }
 
-func createCephfsStorageClass(c kubernetes.Interface, f *framework.Framework, enablePool bool, clusterID string) error {
+func createCephfsStorageClass(c kubernetes.Interface, f *framework.Framework, enablePool bool, clusterID string, parameters map[string]string) error {
 	scPath := fmt.Sprintf("%s/%s", cephfsExamplePath, "storageclass.yaml")
 	sc, err := getStorageClass(scPath)
 	if err != nil {
@@ -64,6 +64,9 @@ func createCephfsStorageClass(c kubernetes.Interface, f *framework.Framework, en
 	fsID = strings.Trim(fsID, "\n")
 	if clusterID != "" {
 		fsID = clusterID
+	}
+	for k, v := range parameters {
+		sc.Parameters[k] = v
 	}
 	sc.Namespace = cephCSINamespace
 	sc.Parameters["clusterID"] = fsID

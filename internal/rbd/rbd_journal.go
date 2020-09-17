@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/ceph/ceph-csi/internal/util"
 )
@@ -229,6 +230,7 @@ image or not, if temporary snapshots and clones created for the volume when the
 content source is volume we need to recover from the stale entries or complete
 the pending operations.
 */
+// nolint:gocognit:gocyclo // TODO: reduce complexity
 func (rv *rbdVolume) Exists(ctx context.Context, parentVol *rbdVolume) (bool, error) {
 	err := validateRbdVol(rv)
 	if err != nil {
@@ -239,37 +241,85 @@ func (rv *rbdVolume) Exists(ctx context.Context, parentVol *rbdVolume) (bool, er
 	if rv.Encrypted {
 		kmsID = rv.KMS.GetID()
 	}
-
+	imagePool := ""
+	images := []string{}
+	found := false
+	var imagePoolID int64
 	j, err := volJournal.Connect(rv.Monitors, rv.RadosNamespace, rv.conn.Creds)
 	if err != nil {
 		return false, err
 	}
 	defer j.Destroy()
 
-	imageData, err := j.CheckReservation(
-		ctx, rv.JournalPool, rv.RequestName, rv.NamePrefix, "", kmsID)
-	if err != nil {
-		return false, err
+	if rv.MetroDR {
+		err = rv.openIoctx()
+		if err != nil {
+			return false, err
+		}
+		images, err = getImageNameFromPattern(rv.ioctx, rv.NamePrefix)
+		if err != nil {
+			return false, err
+		}
+		for _, image := range images {
+			// extract the UUID from image name
+			uuid := strings.Replace(image, rv.NamePrefix, "", 1)
+			imageAttributes, jErr := j.GetImageAttributes(
+				ctx, rv.Pool, uuid, false)
+			if jErr != nil {
+				return false, jErr
+			}
+			if imageAttributes == nil || imageAttributes.IsEmpty() {
+				continue
+			}
+			rv.RequestName = imageAttributes.RequestName
+			rv.RbdImageName = imageAttributes.ImageName
+			rv.ReservedID = uuid
+			imagePool = rv.Pool
+			rv.ImageID = imageAttributes.ImageID
+			_, imagePoolID, err = util.GetPoolIDs(ctx, rv.Monitors, rv.JournalPool, rv.Pool, rv.conn.Creds)
+			if err != nil {
+				return false, err
+			}
+			// break if the image details are found
+			if imageAttributes != nil && !imageAttributes.IsEmpty() {
+				found = true
+				break
+			}
+		}
+		// If the image metadata is not found return so that we can create a
+		// new image with new reservation
+		if !found {
+			return false, nil
+		}
 	}
-	if imageData == nil {
-		return false, nil
+	if !found {
+		imageData, jErr := j.CheckReservation(
+			ctx, rv.JournalPool, rv.RequestName, rv.NamePrefix, "", kmsID)
+		if jErr != nil {
+			return false, jErr
+		}
+		if imageData == nil {
+			return false, nil
+		}
+
+		rv.ReservedID = imageData.ImageUUID
+		rv.RbdImageName = imageData.ImageAttributes.ImageName
+		rv.ImageID = imageData.ImageAttributes.ImageID
+		imagePool = imageData.ImagePool
+		imagePoolID = imageData.ImagePoolID
 	}
 
-	rv.ReservedID = imageData.ImageUUID
-	rv.RbdImageName = imageData.ImageAttributes.ImageName
-	rv.ImageID = imageData.ImageAttributes.ImageID
 	// check if topology constraints match what is found
 	rv.Topology, err = util.MatchTopologyForPool(rv.TopologyPools, rv.TopologyRequirement,
-		imageData.ImagePool)
+		imagePool)
 	if err != nil {
 		// TODO check if need any undo operation here, or ErrVolNameConflict
 		return false, err
 	}
 	// update Pool, if it was topology constrained
 	if rv.Topology != nil {
-		rv.Pool = imageData.ImagePool
+		rv.Pool = imagePool
 	}
-
 	// NOTE: Return volsize should be on-disk volsize, not request vol size, so
 	// save it for size checks before fetching image data
 	requestSize := rv.VolSize
@@ -319,7 +369,7 @@ func (rv *rbdVolume) Exists(ctx context.Context, parentVol *rbdVolume) (bool, er
 	// TODO: We should also ensure image features and format is the same
 
 	// found a volume already available, process and return it!
-	rv.VolID, err = util.GenerateVolID(ctx, rv.Monitors, rv.conn.Creds, imageData.ImagePoolID, rv.Pool,
+	rv.VolID, err = util.GenerateVolID(ctx, rv.Monitors, rv.conn.Creds, imagePoolID, rv.Pool,
 		rv.ClusterID, rv.ReservedID, volIDVersion)
 	if err != nil {
 		return false, err

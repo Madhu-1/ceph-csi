@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/ceph/ceph-csi/internal/util"
 
@@ -64,24 +65,62 @@ func checkVolExists(ctx context.Context,
 	sID *snapshotIdentifier,
 	cr *util.Credentials) (*volumeIdentifier, error) {
 	var vid volumeIdentifier
+	subvolumes := &[]SubvolumeList{}
 	// Connect to cephfs' default radosNamespace (csi)
 	j, err := volJournal.Connect(volOptions.Monitors, radosNamespace, cr)
 	if err != nil {
 		return nil, err
 	}
 	defer j.Destroy()
+	// TODO fix this one
+	found := false
+	imageUUID := ""
 
-	imageData, err := j.CheckReservation(
-		ctx, volOptions.MetadataPool, volOptions.RequestName, volOptions.NamePrefix, "", "")
-	if err != nil {
-		return nil, err
-	}
-	if imageData == nil {
-		return nil, nil
-	}
-	imageUUID := imageData.ImageUUID
-	vid.FsSubvolName = imageData.ImageAttributes.ImageName
+	if volOptions.MetroDR {
+		subvolumes, err = listSubvolumes(ctx, volOptions, cr)
+		if err != nil {
+			return nil, err
+		}
+		for _, vol := range *subvolumes {
+			// extract the UUID from image name
+			uuid := strings.Replace(vol.Name, volOptions.NamePrefix, "", 1)
+			imageAttributes, err := j.GetImageAttributes(
+				ctx, volOptions.MetadataPool, uuid, false)
+			if err != nil {
+				return nil, err
+			}
 
+			if imageAttributes == nil || imageAttributes.IsEmpty() {
+				continue
+			}
+
+			volOptions.RequestName = imageAttributes.RequestName
+			vid.FsSubvolName = imageAttributes.ImageName
+			imageUUID = uuid
+			// break if the image details are found
+			if imageAttributes != nil && !imageAttributes.IsEmpty() {
+				found = true
+				break
+			}
+		}
+		// If the image metadata is not found return so that we can create a
+		// new image with new reservation
+		if !found {
+			return nil, errors.New("subvolume not found")
+		}
+	}
+	if !found {
+		imageData, err := j.CheckReservation(
+			ctx, volOptions.MetadataPool, volOptions.RequestName, volOptions.NamePrefix, "", "")
+		if err != nil {
+			return nil, err
+		}
+		if imageData == nil {
+			return nil, nil
+		}
+		imageUUID = imageData.ImageUUID
+		vid.FsSubvolName = imageData.ImageAttributes.ImageName
+	}
 	if sID != nil || pvID != nil {
 		clone, cloneInfoErr := getCloneInfo(ctx, volOptions, cr, volumeID(vid.FsSubvolName))
 		if cloneInfoErr != nil {

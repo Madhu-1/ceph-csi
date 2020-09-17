@@ -25,29 +25,31 @@ import (
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
 
+	"github.com/ceph/ceph-csi/internal/journal"
 	"github.com/ceph/ceph-csi/internal/util"
 )
 
 type volumeOptions struct {
-	TopologyPools       *[]util.TopologyConstrainedPool
-	TopologyRequirement *csi.TopologyRequirement
-	Topology            map[string]string
+	Features            []string
 	RequestName         string
 	NamePrefix          string
-	Size                int64
 	ClusterID           string
 	FsName              string
-	FscID               int64
 	MetadataPool        string
 	Monitors            string `json:"monitors"`
 	Pool                string `json:"pool"`
 	RootPath            string `json:"rootPath"`
 	Mounter             string `json:"mounter"`
-	ProvisionVolume     bool   `json:"provisionVolume"`
 	KernelMountOptions  string `json:"kernelMountOptions"`
 	FuseMountOptions    string `json:"fuseMountOptions"`
 	SubvolumeGroup      string
-	Features            []string
+	ProvisionVolume     bool `json:"provisionVolume"`
+	MetroDR             bool
+	FscID               int64
+	Size                int64
+	TopologyPools       *[]util.TopologyConstrainedPool
+	TopologyRequirement *csi.TopologyRequirement
+	Topology            map[string]string
 }
 
 func validateNonEmptyField(field, fieldName string) error {
@@ -180,6 +182,22 @@ func newVolumeOptions(ctx context.Context, requestName string, req *csi.CreateVo
 
 	if err = extractOptionalOption(&opts.FuseMountOptions, "fuseMountOptions", volOptions); err != nil {
 		return nil, err
+	}
+
+	if err = extractOptionalOption(&opts.NamePrefix, "volumeNamePrefix", volOptions); err != nil {
+		return nil, err
+	}
+
+	if val, ok := volOptions["enableMetroDR"]; ok {
+		enable, pErr := strconv.ParseBool(val)
+		if pErr != nil {
+			return nil, pErr
+		}
+		if enable {
+			opts.MetroDR = true
+			// update NamePrefix with pvc and namespace name
+			opts.NamePrefix = journal.GenerateName(opts.NamePrefix, volOptions[util.PvcName], volOptions[util.PvcNamespaceName], false)
+		}
 	}
 
 	opts.RequestName = requestName

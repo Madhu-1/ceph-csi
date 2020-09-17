@@ -1240,6 +1240,34 @@ var _ = Describe("RBD", func() {
 				validateRBDImageCount(f, 0)
 			})
 
+			By("Test RBD Metro-DR", func() {
+				// Incase of metro-DR, multiple kubernetes clusters will be
+				// connected to a single ceph instance, when the workload
+				// (PVC,Applications etc) is moved from one kubernetes cluster
+				// to another kubernetes cluster the PVC should use the same
+				// rbd image.
+				err := deleteResource(rbdExamplePath + "storageclass.yaml")
+				if err != nil {
+					e2elog.Failf("failed to delete storageclass with error %v", err)
+				}
+				err = createRBDStorageClass(f.ClientSet, f, nil, map[string]string{"metroDR": "true"})
+				if err != nil {
+					e2elog.Failf("failed to create storageclass with error %v", err)
+				}
+				// verify RBD metro-DR works
+				err = validateMetroDR(pvcPath, appPath, false, f)
+				if err != nil {
+					e2elog.Failf("failed to load PVC with error %v", err)
+				}
+				err = deleteResource(rbdExamplePath + "storageclass.yaml")
+				if err != nil {
+					e2elog.Failf("failed to delete storageclass with error %v", err)
+				}
+				err = createRBDStorageClass(f.ClientSet, f, nil, nil)
+				if err != nil {
+					e2elog.Failf("failed to create storageclass with error %v", err)
+				}
+			})
 			// Make sure this should be last testcase in this file, because
 			// it deletes pool
 			By("Create a PVC and delete PVC when backend pool deleted", func() {

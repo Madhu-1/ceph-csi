@@ -57,6 +57,11 @@ type Subvolume struct {
 	UID   int    `json:"uid"`
 }
 
+// SubvolumeList holds the name of the subvolume.
+type SubvolumeList struct {
+	Name string `json:"name"`
+}
+
 func getVolumeRootPathCephDeprecated(volID volumeID) string {
 	return path.Join("/", "csi-volumes", string(volID))
 }
@@ -86,6 +91,29 @@ func getVolumeRootPathCeph(ctx context.Context, volOptions *volumeOptions, cr *u
 		return "", err
 	}
 	return strings.TrimSuffix(stdout, "\n"), nil
+}
+
+func listSubvolumes(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials) (*[]SubvolumeList, error) {
+	subvolumes := []SubvolumeList{}
+	err := execCommandJSON(
+		ctx,
+		&subvolumes,
+		"ceph",
+		"fs",
+		"subvolume",
+		"ls",
+		volOptions.FsName,
+		"--group_name",
+		volOptions.SubvolumeGroup,
+		"-m", volOptions.Monitors,
+		"-c", util.CephConfigPath,
+		"-n", cephEntityClientPrefix+cr.ID,
+		"--keyfile="+cr.KeyFile)
+	if err != nil {
+		util.ErrorLog(ctx, "failed to list subvolumes %v", err)
+		return &subvolumes, err
+	}
+	return &subvolumes, nil
 }
 
 func getSubVolumeInfo(ctx context.Context, volOptions *volumeOptions, cr *util.Credentials, volID volumeID) (Subvolume, error) {

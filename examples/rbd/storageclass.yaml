@@ -28,6 +28,10 @@ parameters:
    # RBD image features, CSI creates image with image-format 2
    # CSI RBD currently supports only `layering` feature.
    imageFeatures: layering
+   # enableMetroDR will be used incase of DR when load is moved to another
+   # kubernetes/ocp cluster to reuse the rbd image when PVC is created with
+   # same name in same namespace.
+   # enableMetroDR: true
 
    # The secrets have to contain Ceph credentials with required access
    # to the 'pool'.

@@ -79,6 +79,11 @@ func (cs *ControllerServer) validateCreateVolumeRequest(req *csi.CreateVolumeReq
 		return err
 	}
 
+	err = util.ValidateCommonParameters(req)
+	if err != nil {
+		return err
+	}
+
 	if req.VolumeContentSource != nil {
 		volumeSource := req.VolumeContentSource
 		switch volumeSource.Type.(type) {

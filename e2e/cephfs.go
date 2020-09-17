@@ -220,7 +220,7 @@ var _ = Describe("cephfs", func() {
 			})
 
 			By("create a storageclass with pool and a PVC then bind it to an app", func() {
-				err := createCephfsStorageClass(f.ClientSet, f, true, "")
+				err := createCephfsStorageClass(f.ClientSet, f, true, "", nil)
 				if err != nil {
 					e2elog.Failf("failed to create CephFS storageclass with error %v", err)
 				}
@@ -235,7 +235,7 @@ var _ = Describe("cephfs", func() {
 			})
 
 			By("create a PVC and bind it to an app", func() {
-				err := createCephfsStorageClass(f.ClientSet, f, false, "")
+				err := createCephfsStorageClass(f.ClientSet, f, false, "", nil)
 				if err != nil {
 					e2elog.Failf("failed to create CephFS storageclass with error %v", err)
 				}
@@ -332,7 +332,7 @@ var _ = Describe("cephfs", func() {
 				if err != nil {
 					e2elog.Failf("failed to create configmap with error %v", err)
 				}
-				err = createCephfsStorageClass(f.ClientSet, f, false, "clusterID-1")
+				err = createCephfsStorageClass(f.ClientSet, f, false, "clusterID-1", nil)
 				if err != nil {
 					e2elog.Failf("failed to create storageclass with error %v", err)
 				}
@@ -352,7 +352,7 @@ var _ = Describe("cephfs", func() {
 
 				// create resources and verify subvolume group creation
 				// for the second cluster.
-				err = createCephfsStorageClass(f.ClientSet, f, false, "clusterID-2")
+				err = createCephfsStorageClass(f.ClientSet, f, false, "clusterID-2", nil)
 				if err != nil {
 					e2elog.Failf("failed to create storageclass with error %v", err)
 				}
@@ -376,7 +376,7 @@ var _ = Describe("cephfs", func() {
 				if err != nil {
 					e2elog.Failf("failed to create configmap with error %v", err)
 				}
-				err = createCephfsStorageClass(f.ClientSet, f, false, "")
+				err = createCephfsStorageClass(f.ClientSet, f, false, "", nil)
 				if err != nil {
 					e2elog.Failf("failed to create storageclass with error %v", err)
 				}
@@ -744,6 +744,36 @@ var _ = Describe("cephfs", func() {
 					e2elog.Failf("failed to delete PVC with error %v", err)
 				}
 			})
+
+			By("Test CephFS Metro-DR", func() {
+				// Incase of metro-DR, multiple kubernetes clusters will be
+				// connected to a single ceph instance, when the workload
+				// (PVC,Applications etc) is moved from one kubernetes cluster
+				// to another kubernetes cluster the PVC should use the same
+				// CephFS subvolume.
+				err := deleteResource(cephfsExamplePath + "storageclass.yaml")
+				if err != nil {
+					e2elog.Failf("failed to delete storageclass with error %v", err)
+				}
+				err = createCephfsStorageClass(f.ClientSet, f, false, "", map[string]string{"metroDR": "true"})
+				if err != nil {
+					e2elog.Failf("failed to create storageclass with error %v", err)
+				}
+				// verify CephFS metro-DR works
+				err = validateMetroDR(pvcPath, appPath, false, f)
+				if err != nil {
+					e2elog.Failf("failed to load PVC with error %v", err)
+				}
+				err = deleteResource(cephfsExamplePath + "storageclass.yaml")
+				if err != nil {
+					e2elog.Failf("failed to delete storageclass with error %v", err)
+				}
+				err = createCephfsStorageClass(f.ClientSet, f, false, "", nil)
+				if err != nil {
+					e2elog.Failf("failed to create storageclass with error %v", err)
+				}
+			})
+
 			// Make sure this should be last testcase in this file, because
 			// it deletes pool
 			By("Create a PVC and delete PVC when backend pool deleted", func() {

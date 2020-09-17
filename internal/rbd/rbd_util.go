@@ -28,6 +28,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ceph/ceph-csi/internal/journal"
 	"github.com/ceph/ceph-csi/internal/util"
 
 	"github.com/ceph/go-ceph/rados"
@@ -101,6 +102,7 @@ type rbdVolume struct {
 	DisableInUseChecks  bool   `json:"disableInUseChecks"`
 	Encrypted           bool
 	readOnly            bool
+	MetroDR             bool
 	KMS                 util.EncryptionKMS
 	CreatedAt           *timestamp.Timestamp
 	// conn is a connection to the Ceph cluster obtained from a ConnPool
@@ -222,6 +224,25 @@ func createImage(ctx context.Context, pOpts *rbdVolume, cr *util.Credentials) er
 	}
 
 	return nil
+}
+
+func listImages(ioctx *rados.IOContext) ([]string, error) {
+	return librbd.GetImageNames(ioctx)
+}
+
+// checkImageIsPresent list all the images in the pool and checks the image
+// is starting with the pattern.
+func getImageNameFromPattern(ioctx *rados.IOContext, pattern string) ([]string, error) {
+	images, err := listImages(ioctx)
+	if err != nil {
+		return images, err
+	}
+	for _, image := range images {
+		if strings.HasPrefix(image, pattern) {
+			images = append(images, image)
+		}
+	}
+	return images, nil
 }
 
 func (rv *rbdVolume) openIoctx() error {
@@ -743,6 +764,17 @@ func genVolFromVolumeOptions(ctx context.Context, volOptions, credentials map[st
 		rbdVol.NamePrefix = namePrefix
 	}
 
+	if val, found := volOptions["enableMetroDR"]; found {
+		enable, pErr := strconv.ParseBool(val)
+		if pErr != nil {
+			return nil, pErr
+		}
+		if enable {
+			rbdVol.MetroDR = true
+			// update NamePrefix with pvc and namespace name
+			rbdVol.NamePrefix = journal.GenerateName(rbdVol.NamePrefix, volOptions[util.PvcName], volOptions[util.PvcNamespaceName], false)
+		}
+	}
 	rbdVol.Monitors, rbdVol.ClusterID, err = util.GetMonsAndClusterID(volOptions)
 	if err != nil {
 		util.ErrorLog(ctx, "failed getting mons (%s)", err)
