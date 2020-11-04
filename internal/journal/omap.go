@@ -53,13 +53,21 @@ func getOMapValues(
 	}
 
 	err = ioctx.ListOmapValues(
-		oid, "", prefix, int64(len(want)+listExcess),
+		oid, "", prefix, 200,
 		func(key string, value []byte) {
 			if want[key] {
 				results[key] = string(value)
 			}
 		},
 	)
+	util.ErrorLog(ctx, "Madhu the requested keys %s , found result ofListOmapValues %s\n", keys, results)
+
+	value, err := ioctx.GetAllOmapValues(oid, "", prefix, 200)
+	util.ErrorLog(ctx, "Madhu the requested keys %s , found keys and values %s and error %s\n", keys, value, err)
+	for key, v := range value {
+		util.ErrorLog(ctx, "Madhu the keys and values %s:%s\n", key, string(v))
+	}
+
 	if err != nil {
 		if errors.Is(err, rados.ErrNotFound) {
 			util.ErrorLog(ctx, "omap not found (pool=%q, namespace=%q, name=%q): %v",

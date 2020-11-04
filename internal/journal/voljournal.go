@@ -403,6 +403,7 @@ func (conn *Connection) UndoReservation(ctx context.Context,
 	csiJournalPool, volJournalPool, volName, reqName string) error {
 	// delete volume UUID omap (first, inverse of create order)
 
+	util.ErrorLog(ctx, "Madhu am i undoing the reservartion for %s and %s", volName, reqName)
 	cj := conn.config
 	if volName != "" {
 		if len(volName) < uuidEncodedLength {

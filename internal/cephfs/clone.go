@@ -27,6 +27,8 @@ import (
 const (
 	// cephFSCloneFailed indicates that clone is in failed state.
 	cephFSCloneFailed = "failed"
+	// cephFSClonePending indicates that clone is in pending state.
+	cephFSClonePending = "pending"
 	// cephFSCloneInprogress indicates that clone is in in-progress state.
 	cephFSCloneInprogress = "in-progress"
 	// cephFSCloneComplete indicates that clone is in complete state.
@@ -94,6 +96,9 @@ func createCloneFromSubvolume(ctx context.Context, volID, cloneID volumeID, volO
 	case cephFSCloneInprogress:
 		util.ErrorLog(ctx, "clone is in progress for %v", cloneID)
 		return ErrCloneInProgress
+	case cephFSClonePending:
+		util.ErrorLog(ctx, "clone is pending for %v", cloneID)
+		return ErrClonePending
 	case cephFSCloneFailed:
 		util.ErrorLog(ctx, "clone failed for %v", cloneID)
 		cloneFailedErr := fmt.Errorf("clone %s is in %s state", cloneID, clone.Status.State)
@@ -158,7 +163,7 @@ func createCloneFromSnapshot(ctx context.Context, parentVolOpt, volOptions *volu
 	}
 	defer func() {
 		if err != nil {
-			if !errors.Is(err, ErrCloneInProgress) {
+			if !errors.Is(err, ErrCloneInProgress) && !errors.Is(err, ErrClonePending) {
 				if dErr := purgeVolume(ctx, volumeID(vID.FsSubvolName), cr, volOptions, true); dErr != nil {
 					util.ErrorLog(ctx, "failed to delete volume %s: %v", vID.FsSubvolName, dErr)
 				}
@@ -173,6 +178,8 @@ func createCloneFromSnapshot(ctx context.Context, parentVolOpt, volOptions *volu
 	switch clone.Status.State {
 	case cephFSCloneInprogress:
 		return ErrCloneInProgress
+	case cephFSClonePending:
+		return ErrClonePending
 	case cephFSCloneFailed:
 		return fmt.Errorf("clone %s is in %s state", vID.FsSubvolName, clone.Status.State)
 	case cephFSCloneComplete:
@@ -211,7 +218,7 @@ func getCloneInfo(ctx context.Context, volOptions *volumeOptions, cr *util.Crede
 		"--keyfile=" + cr.KeyFile,
 		"--format=json",
 	}
-	err := execCommandJSON(
+	_, err := execCommandJSON(
 		ctx,
 		&clone,
 		"ceph",
@@ -220,5 +227,6 @@ func getCloneInfo(ctx context.Context, volOptions *volumeOptions, cr *util.Crede
 		util.ErrorLog(ctx, "failed to get subvolume clone info %s(%s) in fs %s", string(volID), err, volOptions.FsName)
 		return clone, err
 	}
+	util.DebugLog(ctx, "clone status for %s is %s", string(volID), clone.Status.State)
 	return clone, nil
 }

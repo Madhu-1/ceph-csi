@@ -229,13 +229,13 @@ func purgeVolume(ctx context.Context, volID volumeID, cr *util.Credentials, volO
 		arg = append(arg, "--retain-snapshots")
 	}
 
-	err := execCommandErr(ctx, "ceph", arg...)
+	stdErr, err := execCommandWithStdErr(ctx, "ceph", arg...)
 	if err != nil {
-		util.ErrorLog(ctx, "failed to purge subvolume %s in fs %s: %s", string(volID), volOptions.FsName, err)
-		if strings.Contains(err.Error(), volumeNotEmpty) {
+		util.ErrorLog(ctx, "failed to purge subvolume %s in fs %s: with Error: %s and stdError: %v", string(volID), volOptions.FsName, err, stdErr)
+		if strings.Contains(stdErr, volumeNotEmpty) {
 			return util.JoinErrors(ErrVolumeHasSnapshots, err)
 		}
-		if strings.Contains(err.Error(), volumeNotFound) {
+		if strings.Contains(stdErr, volumeNotFound) {
 			return util.JoinErrors(ErrVolumeNotFound, err)
 		}
 		return err

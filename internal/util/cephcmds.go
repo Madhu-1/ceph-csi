@@ -46,15 +46,14 @@ func ExecCommand(ctx context.Context, program string, args ...string) (string, s
 	err := cmd.Run()
 	stdout := stdoutBuf.String()
 	stderr := stderrBuf.String()
-
+	fmt.Printf("Madhu stderr is %s and error is err %s\n", stderr, err)
 	if err != nil {
-		err = fmt.Errorf("an error (%w) occurred while running %s args: %v", err, program, sanitizedArgs)
+		err = fmt.Errorf("an error (%w) and stderr (%v) occurred while running %s args: %v", err, stderr, program, sanitizedArgs)
 		if ctx != context.TODO() {
 			UsefulLog(ctx, "%s", err)
 		}
 		return stdout, stderr, err
 	}
-
 	if ctx != context.TODO() {
 		UsefulLog(ctx, "command succeeded: %s %v", program, sanitizedArgs)
 	}

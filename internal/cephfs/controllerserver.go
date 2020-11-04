@@ -80,6 +80,7 @@ func (cs *ControllerServer) createBackingVolume(
 		defer cs.OperationLocks.ReleaseCloneLock(pvID.VolumeID)
 		err = createCloneFromSubvolume(ctx, volumeID(pvID.FsSubvolName), volumeID(vID.FsSubvolName), volOptions, parentVolOpt, cr)
 		if err != nil {
+			// TODO logging need to be improved
 			util.ErrorLog(ctx, "failed to create clone from subvolume %s: %v", volumeID(pvID.FsSubvolName), err)
 			return err
 		}
@@ -173,7 +174,7 @@ func (cs *ControllerServer) CreateVolume(ctx context.Context, req *csi.CreateVol
 
 	vID, err := checkVolExists(ctx, volOptions, parentVol, pvID, sID, cr)
 	if err != nil {
-		if errors.Is(err, ErrCloneInProgress) {
+		if errors.Is(err, ErrCloneInProgress) || errors.Is(err, ErrClonePending) {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
 		return nil, status.Error(codes.Internal, err.Error())
@@ -233,7 +234,8 @@ func (cs *ControllerServer) CreateVolume(ctx context.Context, req *csi.CreateVol
 
 	defer func() {
 		if err != nil {
-			if !errors.Is(err, ErrCloneInProgress) {
+			if !errors.Is(err, ErrCloneInProgress) && !errors.Is(err, ErrClonePending) {
+				util.ErrorLog(ctx, "am i hitting here %v", err)
 				errDefer := undoVolReservation(ctx, volOptions, *vID, secret)
 				if errDefer != nil {
 					util.WarningLog(ctx, "failed undoing reservation of volume: %s (%s)",
@@ -246,7 +248,7 @@ func (cs *ControllerServer) CreateVolume(ctx context.Context, req *csi.CreateVol
 	// Create a volume
 	err = cs.createBackingVolume(ctx, volOptions, parentVol, vID, pvID, sID, cr)
 	if err != nil {
-		if errors.Is(err, ErrCloneInProgress) {
+		if errors.Is(err, ErrCloneInProgress) || errors.Is(err, ErrClonePending) {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
 		return nil, err

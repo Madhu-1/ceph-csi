@@ -105,6 +105,9 @@ func checkVolExists(ctx context.Context,
 		if clone.Status.State == cephFSCloneInprogress {
 			return nil, ErrCloneInProgress
 		}
+		if clone.Status.State == cephFSClonePending {
+			return nil, ErrClonePending
+		}
 		if clone.Status.State == cephFSCloneFailed {
 			err = purgeVolume(ctx, volumeID(vid.FsSubvolName), cr, volOptions, true)
 			if err != nil {
@@ -180,7 +183,7 @@ func undoVolReservation(ctx context.Context, volOptions *volumeOptions, vid volu
 		return err
 	}
 	defer j.Destroy()
-
+	util.ErrorLog(ctx, "am i undoing the reservation for %s  and %s", vid.FsSubvolName, volOptions.RequestName)
 	err = j.UndoReservation(ctx, volOptions.MetadataPool,
 		volOptions.MetadataPool, vid.FsSubvolName, volOptions.RequestName)
 
