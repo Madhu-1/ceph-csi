@@ -18,10 +18,8 @@ import (
 var (
 	rbdProvisioner     = "csi-rbdplugin-provisioner.yaml"
 	rbdProvisionerRBAC = "csi-provisioner-rbac.yaml"
-	rbdProvisionerPSP  = "csi-provisioner-psp.yaml"
 	rbdNodePlugin      = "csi-rbdplugin.yaml"
 	rbdNodePluginRBAC  = "csi-nodeplugin-rbac.yaml"
-	rbdNodePluginPSP   = "csi-nodeplugin-psp.yaml"
 	configMap          = "csi-config-map.yaml"
 	csiDriverObject    = "csidriver.yaml"
 	rbdDirPath         = "../deploy/rbd/kubernetes/"
@@ -101,15 +99,6 @@ func createORDeleteRbdResouces(action string) {
 		e2elog.Failf("failed to %s provisioner rbac with error %v", action, err)
 	}
 
-	data, err = replaceNamespaceInTemplate(rbdDirPath + rbdProvisionerPSP)
-	if err != nil {
-		e2elog.Failf("failed to read content from %s with error %v", rbdDirPath+rbdProvisionerPSP, err)
-	}
-	_, err = framework.RunKubectlInput(cephCSINamespace, data, action, "-f", "-")
-	if err != nil {
-		e2elog.Failf("failed to %s provisioner psp with error %v", action, err)
-	}
-
 	data, err = replaceNamespaceInTemplate(rbdDirPath + rbdNodePlugin)
 	if err != nil {
 		e2elog.Failf("failed to read content from %s with error %v", rbdDirPath+rbdNodePlugin, err)
@@ -129,15 +118,6 @@ func createORDeleteRbdResouces(action string) {
 	_, err = framework.RunKubectlInput(cephCSINamespace, data, action, ns, "-f", "-")
 	if err != nil {
 		e2elog.Failf("failed to %s nodeplugin rbac with error %v", action, err)
-	}
-
-	data, err = replaceNamespaceInTemplate(rbdDirPath + rbdNodePluginPSP)
-	if err != nil {
-		e2elog.Failf("failed to read content from %s with error %v", rbdDirPath+rbdNodePluginPSP, err)
-	}
-	_, err = framework.RunKubectlInput(cephCSINamespace, data, action, ns, "-f", "-")
-	if err != nil {
-		e2elog.Failf("failed to %s nodeplugin psp with error %v", action, err)
 	}
 }
 

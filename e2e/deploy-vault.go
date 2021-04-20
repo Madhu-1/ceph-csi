@@ -14,7 +14,6 @@ import (
 var (
 	vaultExamplePath = "../examples/kms/vault/"
 	vaultServicePath = "vault.yaml"
-	vaultPSPPath     = "vault-psp.yaml"
 	vaultRBACPath    = "csi-vaulttokenreview-rbac.yaml"
 	vaultConfigPath  = "kms-config.yaml"
 )
@@ -73,14 +72,5 @@ func createORDeleteVault(action string) {
 	_, err = framework.RunKubectlInput(cephCSINamespace, data, action, ns, "-f", "-")
 	if err != nil {
 		e2elog.Failf("failed to %s vault configmap %v", action, err)
-	}
-
-	data, err = replaceNamespaceInTemplate(vaultExamplePath + vaultPSPPath)
-	if err != nil {
-		e2elog.Failf("failed to read content from %s %v", vaultExamplePath+vaultPSPPath, err)
-	}
-	_, err = framework.RunKubectlInput(cephCSINamespace, data, action, ns, "-f", "-")
-	if err != nil {
-		e2elog.Failf("failed to %s vault psp %v", action, err)
 	}
 }

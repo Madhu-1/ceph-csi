@@ -20,10 +20,8 @@ import (
 var (
 	cephfsProvisioner     = "csi-cephfsplugin-provisioner.yaml"
 	cephfsProvisionerRBAC = "csi-provisioner-rbac.yaml"
-	cephfsProvisionerPSP  = "csi-provisioner-psp.yaml"
 	cephfsNodePlugin      = "csi-cephfsplugin.yaml"
 	cephfsNodePluginRBAC  = "csi-nodeplugin-rbac.yaml"
-	cephfsNodePluginPSP   = "csi-nodeplugin-psp.yaml"
 	cephfsDeploymentName  = "csi-cephfsplugin-provisioner"
 	cephfsDeamonSetName   = "csi-cephfsplugin"
 	cephfsContainerName   = "csi-cephfsplugin"
@@ -95,15 +93,6 @@ func createORDeleteCephfsResouces(action string) {
 		e2elog.Failf("failed to %s CephFS provisioner rbac with error %v", action, err)
 	}
 
-	data, err = replaceNamespaceInTemplate(cephfsDirPath + cephfsProvisionerPSP)
-	if err != nil {
-		e2elog.Failf("failed to read content from %s with error %v", cephfsDirPath+cephfsProvisionerPSP, err)
-	}
-	_, err = framework.RunKubectlInput(cephCSINamespace, data, action, ns, "-f", "-")
-	if err != nil {
-		e2elog.Failf("failed to %s CephFS provisioner psp with error %v", action, err)
-	}
-
 	data, err = replaceNamespaceInTemplate(cephfsDirPath + cephfsNodePlugin)
 	if err != nil {
 		e2elog.Failf("failed to read content from %s with error %v", cephfsDirPath+cephfsNodePlugin, err)
@@ -120,15 +109,6 @@ func createORDeleteCephfsResouces(action string) {
 	_, err = framework.RunKubectlInput(cephCSINamespace, data, action, ns, "-f", "-")
 	if err != nil {
 		e2elog.Failf("failed to %s CephFS nodeplugin rbac with error %v", action, err)
-	}
-
-	data, err = replaceNamespaceInTemplate(cephfsDirPath + cephfsNodePluginPSP)
-	if err != nil {
-		e2elog.Failf("failed to read content from %s with error %v", cephfsDirPath+cephfsNodePluginPSP, err)
-	}
-	_, err = framework.RunKubectlInput(cephCSINamespace, data, action, ns, "-f", "-")
-	if err != nil {
-		e2elog.Failf("failed to %s CephFS nodeplugin psp with error %v", action, err)
 	}
 }
 

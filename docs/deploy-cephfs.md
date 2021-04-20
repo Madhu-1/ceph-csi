@@ -48,7 +48,7 @@ that should be resolved in v14.2.3.
 | `--endpoint`              | `unix://tmp/csi.sock`       | CSI endpoint, must be a UNIX socket                                                                                                                                                                                                                                                  |
 | `--drivername`            | `cephfs.csi.ceph.com`       | Name of the driver (Kubernetes: `provisioner` field in StorageClass must correspond to this value)                                                                                                                                                                                   |
 | `--nodeid`                | _empty_                     | This node's ID                                                                                                                                                                                                                                                                       |
-| `--type`                  | _empty_                     | Driver type: `[rbd/cephfs]`. If the driver type is set to  `rbd` it will act as a `rbd plugin` or if it's set to `cephfs` will act as a `cephfs plugin`                                                                                                                                        |
+| `--type`                  | _empty_                     | Driver type: `[rbd/cephfs]`. If the driver type is set to  `rbd` it will act as a `rbd plugin` or if it's set to `cephfs` will act as a `cephfs plugin`                                                                                                                              |
 | `--instanceid`            | "default"                   | Unique ID distinguishing this instance of Ceph CSI among other instances, when sharing Ceph clusters across CSI instances for provisioning                                                                                                                                           |
 | `--pluginpath`            | "/var/lib/kubelet/plugins/" | The location of cephcsi plugin on host                                                                                                                                                                                                                                               |
 | `--pidlimit`              | _0_                         | Configure the PID limit in cgroups. The container runtime can restrict the number of processes/tasks which can cause problems while provisioning (or deleting) a large number of volumes. A value of `-1` configures the limit to the maximum, `0` does not configure limits at all. |
@@ -135,16 +135,6 @@ kubectl create -f csi-nodeplugin-rbac.yaml
 Those manifests deploy service accounts, cluster roles and cluster role
 bindings. These are shared for both RBD and CephFS CSI plugins, as they require
 the same permissions.
-
-**Deploy PodSecurityPolicy resources for sidecar containers and node plugins:**
-
-**NOTE:** These manifests are required only if [PodSecurityPolicy](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#podsecuritypolicy)
-admission controller is active on your cluster.
-
-```bash
-kubectl create -f csi-provisioner-psp.yaml
-kubectl create -f csi-nodeplugin-psp.yaml
-```
 
 **Deploy ConfigMap for CSI plugins:**
 
