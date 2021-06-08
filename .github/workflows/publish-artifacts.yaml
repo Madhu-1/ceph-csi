@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set build environment based on Git branch name
-        if: github.ref == 'refs/heads/devel'
+        if: github.base_ref == 'devel'
         run: echo "BRANCH_NAME=devel" >> $GITHUB_ENV
       - uses: actions/checkout@v2
       - name: publish artifacts
@@ -26,4 +26,4 @@ jobs:
         # use docker to build images
         # run: GITHUB_ToKEN=${{ secrets.GITHUB_TOKEN }} CONTAINER_CMD=docker
         # ./deploy.sh
-        run: GITHUB_ToKEN="token" CONTAINER_CMD=docker ./deploy.sh
+        run: GITHUB_TOKEN="token" BRANCH_NAME= ${{ github.base_ref }}CONTAINER_CMD=docker ./deploy.sh
