@@ -1,0 +1,35 @@
+---
+name: publish image
+# yamllint disable-line rule:truthy
+on:
+  push:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      # Push events on main branch
+      - devel
+      # Push events to branches matching refs/heads/release-v*.*
+      - "release-*"
+    tags:
+      - "v*"
+jobs:
+  push:
+    name: Publish artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_IO_USERNAME }}
+          password: ${{ secrets.QUAY_IO_PASSWORD }}
+      - name: Set build environment based on Git branch name
+        if: github.ref == 'refs/heads/devel'
+        run: echo "BRANCH_NAME=devel" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - name: publish artifacts
+        # podman cannot pull images with both tag and digest
+        # https://github.com/containers/buildah/issues/1407
+        # use docker to build images
+        # run: GITHUB_ToKEN=${{ secrets.GITHUB_TOKEN }} CONTAINER_CMD=docker
+        # ./deploy.sh
+        run: GITHUB_ToKEN="token" CONTAINER_CMD=docker ./deploy.sh
