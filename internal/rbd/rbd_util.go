@@ -206,7 +206,21 @@ var (
 			needRbdNbd: false,
 		},
 		librbd.FeatureNameExclusiveLock: {
-			needRbdNbd: true,
+			needRbdNbd: false,
+		},
+		librbd.FeatureNameObjectMap: {
+			needRbdNbd: false,
+			dependsOn:  []string{librbd.FeatureNameExclusiveLock},
+		},
+		librbd.FeatureNameFastDiff: {
+			needRbdNbd: false,
+			dependsOn: []string{
+				librbd.FeatureNameObjectMap,
+				librbd.FeatureNameExclusiveLock,
+			},
+		},
+		librbd.FeatureNameDeepFlatten: {
+			needRbdNbd: false,
 		},
 		librbd.FeatureNameJournaling: {
 			needRbdNbd: true,
@@ -1686,7 +1700,7 @@ func updateRBDImageMetadataStash(metaDataPath, device string) error {
 	}
 
 	fPath := filepath.Join(metaDataPath, stashFileName)
-	err = ioutil.WriteFile(fPath, encodedBytes, 0600)
+	err = ioutil.WriteFile(fPath, encodedBytes, 0o600)
 	if err != nil {
 		return fmt.Errorf("failed to stash JSON image metadata at path: (%s) for spec:(%s) : %w",
 			fPath, imgMeta.String(), err)
