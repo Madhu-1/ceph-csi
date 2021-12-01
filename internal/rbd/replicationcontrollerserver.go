@@ -283,23 +283,55 @@ func getOperationName(poolName string, optName operation) string {
 // createDummyImage creates a dummy image as a workaround for the rbd
 // scheduling problem.
 func createDummyImage(ctx context.Context, rbdVol *rbdVolume) error {
+	var err error
+	var imgName string
 	optName := getOperationName(rbdVol.Pool, dummyImageCreated)
 	if _, ok := operationLock.Load(optName); !ok {
 		// create a dummy image
-		imgName, err := getDummyImageName(rbdVol.conn)
+		imgName, err = getDummyImageName(rbdVol.conn)
 		if err != nil {
 			return err
 		}
 		dummyVol := *rbdVol
 		dummyVol.RbdImageName = imgName
-		err = createImage(ctx, &dummyVol, dummyVol.conn.Creds)
-		if err != nil && !strings.Contains(err.Error(), "File exists") {
-			return err
+		f := []string{
+			librbd.FeatureNameLayering,
+			librbd.FeatureNameObjectMap,
+			librbd.FeatureNameExclusiveLock,
+			librbd.FeatureNameFastDiff,
 		}
+		featues := librbd.FeatureSetFromNames(f)
+		dummyVol.imageFeatureSet = featues
+		// create 1Mib dummy image. 1Mib=1048576 bytes
+		dummyVol.VolSize = 1048576
+		err = createImage(ctx, &dummyVol, dummyVol.conn.Creds)
+		if err != nil {
+			if strings.Contains(err.Error(), "File exists") {
+				err = repairDummyImage(ctx, &dummyVol)
+			}
+		}
+	}
+
+	if err == nil {
 		operationLock.Store(optName, true)
 	}
 
-	return nil
+	return err
+}
+
+// repairDummyImage deletes and recreates the dummy image.
+func repairDummyImage(ctx context.Context, dummyVol *rbdVolume) error {
+	// instead of checking the images features and than adding missing image feature
+	// and updating the image size to 1Mib, we will delete the image and
+	// recreate it.
+	// deleting and recreating the dummy image will not imapact anything as
+	// its a working around to fix the scheduling problem.
+	err := deleteImage(ctx, dummyVol, dummyVol.conn.Creds)
+	if err != nil {
+		return err
+	}
+
+	return createImage(ctx, dummyVol, dummyVol.conn.Creds)
 }
 
 // tickleMirroringOnDummyImage disables and reenables mirroring on the dummy image, and sets a
