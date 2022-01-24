@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package core
+package store
 
 import (
 	"context"
@@ -25,6 +25,7 @@ import (
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
 
+	"github.com/ceph/ceph-csi/internal/cephfs/core"
 	cerrors "github.com/ceph/ceph-csi/internal/cephfs/errors"
 	fsutil "github.com/ceph/ceph-csi/internal/cephfs/util"
 	"github.com/ceph/ceph-csi/internal/util"
@@ -32,35 +33,31 @@ import (
 )
 
 type VolumeOptions struct {
+	core.Volume
 	TopologyPools       *[]util.TopologyConstrainedPool
 	TopologyRequirement *csi.TopologyRequirement
 	Topology            map[string]string
 	RequestName         string
 	NamePrefix          string
-	Size                int64
 	ClusterID           string
-	FsName              string
 	FscID               int64
+	MetadataPool        string
 	// ReservedID represents the ID reserved for a subvolume
 	ReservedID         string
-	MetadataPool       string
 	Monitors           string `json:"monitors"`
-	Pool               string `json:"pool"`
 	RootPath           string `json:"rootPath"`
 	Mounter            string `json:"mounter"`
 	ProvisionVolume    bool   `json:"provisionVolume"`
 	KernelMountOptions string `json:"kernelMountOptions"`
 	FuseMountOptions   string `json:"fuseMountOptions"`
-	SubvolumeGroup     string
-	Features           []string
 
 	// conn is a connection to the Ceph cluster obtained from a ConnPool
-	conn *util.ClusterConnection
+	Conn *util.ClusterConnection
 }
 
 // Connect a CephFS volume to the Ceph cluster.
 func (vo *VolumeOptions) Connect(cr *util.Credentials) error {
-	if vo.conn != nil {
+	if vo.Conn != nil {
 		return nil
 	}
 
@@ -69,7 +66,7 @@ func (vo *VolumeOptions) Connect(cr *util.Credentials) error {
 		return err
 	}
 
-	vo.conn = conn
+	vo.Conn = conn
 
 	return nil
 }
@@ -77,8 +74,8 @@ func (vo *VolumeOptions) Connect(cr *util.Credentials) error {
 // Destroy cleans up the CephFS volume object and closes the connection to the
 // Ceph cluster in case one was setup.
 func (vo *VolumeOptions) Destroy() {
-	if vo.conn != nil {
-		vo.conn.Destroy()
+	if vo.Conn != nil {
+		vo.Conn.Destroy()
 	}
 }
 
@@ -230,12 +227,13 @@ func NewVolumeOptions(ctx context.Context, requestName string, req *csi.CreateVo
 		return nil, err
 	}
 
-	opts.FscID, err = opts.getFscID(ctx)
+	fs := core.NewFileSystem(opts.Conn)
+	opts.FscID, err = fs.GetFscID(ctx, opts.FsName)
 	if err != nil {
 		return nil, err
 	}
 
-	opts.MetadataPool, err = opts.getMetadataPool(ctx)
+	opts.MetadataPool, err = fs.GetMetadataPool(ctx, opts.FsName)
 	if err != nil {
 		return nil, err
 	}
@@ -280,6 +278,8 @@ func NewVolumeOptionsFromVolID(
 	}
 	volOptions.ClusterID = vi.ClusterID
 	vid.VolumeID = volID
+	// store  volID in Volume  details
+	volOptions.VolID = volID
 	volOptions.FscID = vi.LocationID
 
 	if volOptions.Monitors, err = util.Mons(util.CsiConfigFile, vi.ClusterID); err != nil {
@@ -308,12 +308,13 @@ func NewVolumeOptionsFromVolID(
 		}
 	}()
 
-	volOptions.FsName, err = volOptions.getFsName(ctx)
+	fs := core.NewFileSystem(volOptions.Conn)
+	volOptions.FsName, err = fs.GetFsName(ctx, volOptions.FscID)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	volOptions.MetadataPool, err = volOptions.getMetadataPool(ctx)
+	volOptions.MetadataPool, err = fs.GetMetadataPool(ctx, volOptions.FsName)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -356,8 +357,9 @@ func NewVolumeOptionsFromVolID(
 	}
 
 	volOptions.ProvisionVolume = true
-
-	info, err := volOptions.GetSubVolumeInfo(ctx, fsutil.VolumeID(vid.FsSubvolName))
+	volOptions.Volume.VolID = vid.FsSubvolName
+	vol := core.NewVolume(volOptions.Conn, &volOptions.Volume, volOptions.ClusterID)
+	info, err := vol.GetSubVolumeInfo(ctx)
 	if err == nil {
 		volOptions.RootPath = info.Path
 		volOptions.Features = info.Features
@@ -365,7 +367,7 @@ func NewVolumeOptionsFromVolID(
 	}
 
 	if errors.Is(err, cerrors.ErrInvalidCommand) {
-		volOptions.RootPath, err = volOptions.GetVolumeRootPathCeph(ctx, fsutil.VolumeID(vid.FsSubvolName))
+		volOptions.RootPath, err = vol.GetVolumeRootPathCeph(ctx)
 	}
 
 	return &volOptions, &vid, err
@@ -408,7 +410,7 @@ func NewVolumeOptionsFromMonitorList(
 			return nil, nil, err
 		}
 
-		opts.RootPath = GetVolumeRootPathCephDeprecated(fsutil.VolumeID(volID))
+		opts.RootPath = core.GetVolumeRootPathCephDeprecated(fsutil.VolumeID(volID))
 	} else {
 		if err = extractOption(&opts.RootPath, "rootPath", options); err != nil {
 			return nil, nil, err
@@ -507,7 +509,7 @@ func NewVolumeOptionsFromStaticVolume(
 func NewSnapshotOptionsFromID(
 	ctx context.Context,
 	snapID string,
-	cr *util.Credentials) (*VolumeOptions, *SnapshotInfo, *SnapshotIdentifier, error) {
+	cr *util.Credentials) (*VolumeOptions, *core.SnapshotInfo, *SnapshotIdentifier, error) {
 	var (
 		vi         util.CSIIdentifier
 		volOptions VolumeOptions
@@ -549,12 +551,13 @@ func NewSnapshotOptionsFromID(
 		}
 	}()
 
-	volOptions.FsName, err = volOptions.getFsName(ctx)
+	fs := core.NewFileSystem(volOptions.Conn)
+	volOptions.FsName, err = fs.GetFsName(ctx, volOptions.FscID)
 	if err != nil {
 		return &volOptions, nil, &sid, err
 	}
 
-	volOptions.MetadataPool, err = volOptions.getMetadataPool(ctx)
+	volOptions.MetadataPool, err = fs.GetMetadataPool(ctx, volOptions.FsName)
 	if err != nil {
 		return &volOptions, nil, &sid, err
 	}
@@ -576,14 +579,17 @@ func NewSnapshotOptionsFromID(
 	sid.FsSnapshotName = imageAttributes.ImageName
 	sid.FsSubvolName = imageAttributes.SourceName
 
-	subvolInfo, err := volOptions.GetSubVolumeInfo(ctx, fsutil.VolumeID(sid.FsSubvolName))
+	volOptions.Volume.VolID = sid.FsSubvolName
+	vol := core.NewVolume(volOptions.Conn, &volOptions.Volume, volOptions.ClusterID)
+
+	subvolInfo, err := vol.GetSubVolumeInfo(ctx)
 	if err != nil {
 		return &volOptions, nil, &sid, err
 	}
 	volOptions.Features = subvolInfo.Features
 	volOptions.Size = subvolInfo.BytesQuota
-
-	info, err := volOptions.GetSnapshotInfo(ctx, fsutil.VolumeID(sid.FsSnapshotName), fsutil.VolumeID(sid.FsSubvolName))
+	snap := core.NewSnapshot(volOptions.Conn, sid.FsSnapshotName, &volOptions.Volume)
+	info, err := snap.GetSnapshotInfo(ctx)
 	if err != nil {
 		return &volOptions, nil, &sid, err
 	}
@@ -591,8 +597,16 @@ func NewSnapshotOptionsFromID(
 	return &volOptions, &info, &sid, nil
 }
 
-func GenSnapFromOptions(ctx context.Context, req *csi.CreateSnapshotRequest) (snap *CephfsSnapshot, err error) {
-	cephfsSnap := &CephfsSnapshot{}
+type SnapshotOption struct {
+	ReservedID  string
+	RequestName string
+	ClusterID   string
+	Monitors    string
+	NamePrefix  string
+}
+
+func GenSnapFromOptions(ctx context.Context, req *csi.CreateSnapshotRequest) (*SnapshotOption, error) {
+	cephfsSnap := &SnapshotOption{}
 	cephfsSnap.RequestName = req.GetName()
 	snapOptions := req.GetParameters()
 
