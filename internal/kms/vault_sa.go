@@ -24,6 +24,7 @@ import (
 	"os"
 
 	"github.com/libopenstorage/secrets/vault"
+	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -35,6 +36,9 @@ const (
 	// should be available in the Tenants namespace. This ServiceAccount
 	// will be used to connect to Hashicorp Vault.
 	vaultTenantSAName = "ceph-csi-vault-sa"
+	// Kubernetes version to get token from the ServiceAccount.
+	kubeMajorVersion = "1"
+	kubeMinorVersion = "24"
 )
 
 /*
@@ -292,15 +296,41 @@ func (kms *vaultTenantSA) getToken() (string, error) {
 	}
 
 	for _, secretRef := range sa.Secrets {
-		secret, err := c.CoreV1().Secrets(kms.Tenant).Get(context.TODO(), secretRef.Name, metav1.GetOptions{})
-		if err != nil {
-			return "", fmt.Errorf("failed to get Secret %s/%s: %w", kms.Tenant, secretRef.Name, err)
+		secret, sErr := c.CoreV1().Secrets(kms.Tenant).Get(context.TODO(), secretRef.Name, metav1.GetOptions{})
+		if sErr != nil {
+			return "", fmt.Errorf("failed to get Secret %s/%s: %w", kms.Tenant, secretRef.Name, sErr)
 		}
 
 		token, ok := secret.Data["token"]
 		if ok {
 			return string(token), nil
 		}
+	}
+
+	version, err := c.ServerVersion()
+	if err != nil {
+		return "", fmt.Errorf("can not get ServiceVersion %w", err)
+	}
+	if version.Major == kubeMajorVersion && version.Minor >= kubeMinorVersion {
+		tokenExpireTime := int64(3600)
+		tokenRequest := &authenticationv1.TokenRequest{
+			Spec: authenticationv1.TokenRequestSpec{
+				Audiences:         []string{"ceph-csi-kms"},
+				ExpirationSeconds: &tokenExpireTime,
+			},
+		}
+
+		token, err := c.CoreV1().ServiceAccounts(kms.Tenant).CreateToken(
+			context.TODO(),
+			sa.Name,
+			tokenRequest,
+			metav1.CreateOptions{},
+		)
+		if err != nil {
+			return "", fmt.Errorf("failed to create token for service account %s/%s: %w", kms.Tenant, sa.Name, err)
+		}
+
+		return token.Status.Token, nil
 	}
 
 	return "", fmt.Errorf("failed to find token in ServiceAccount %s/%s", kms.Tenant, kms.tenantSAName)
