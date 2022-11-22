@@ -38,7 +38,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-//  imageMirroringMode is used to indicate the mirroring mode for an RBD image.
+// imageMirroringMode is used to indicate the mirroring mode for an RBD image.
 type imageMirroringMode string
 
 const (
@@ -461,7 +461,7 @@ func (rs *ReplicationServer) PromoteVolume(ctx context.Context,
 
 	interval, startTime := getSchedulingDetails(req.GetParameters())
 	if interval != admin.NoInterval {
-		err = rbdVol.addSnapshotScheduling(interval, startTime)
+		err = rbdVol.addSnapshotScheduling(ctx, interval, startTime)
 		if err != nil {
 			return nil, err
 		}
