@@ -24,6 +24,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	corerbd "github.com/ceph/ceph-csi/internal/rbd"
@@ -39,6 +40,12 @@ import (
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
+
+// imageResyncMap is used to store the volumeID and image creation time for resync.
+// The volumeID gets added to the map when the DemoteVolume RPC is called and
+// removed from the map when the PromoteVolume RPC is called or
+// DisableVolumeReplication RPC is called.
+var imageResyncMap = sync.Map{}
 
 // imageMirroringMode is used to indicate the mirroring mode for an RBD image.
 type imageMirroringMode string
@@ -337,11 +344,15 @@ func (rs *ReplicationServer) DisableVolumeReplication(ctx context.Context,
 		if err != nil {
 			return nil, getGRPCError(err)
 		}
+		imageResyncMap.Delete(volumeID)
 
 		return &replication.DisableVolumeReplicationResponse{}, nil
 	default:
 		return nil, status.Errorf(codes.InvalidArgument, "image is in %s Mode", mirroringInfo.State)
 	}
+	// remove the volume from the resync map as the image mirroring is disabled and
+	// during next Demote operation cephcsi will readd the image to the sync map
+	imageResyncMap.Delete(volumeID)
 
 	return &replication.DisableVolumeReplicationResponse{}, nil
 }
@@ -439,6 +450,13 @@ func (rs *ReplicationServer) PromoteVolume(ctx context.Context,
 			rbdVol)
 	}
 
+	// remove the volume from the resync map as the image is promoted and
+	// during next Demote operation cephcsi will readd the image to the sync
+	// map.
+	// This is required if someone doesnt call DisableVolumeReplication but try
+	// to toggle between PromoteVolume and DemoteVolume RPC calls.
+	imageResyncMap.Delete(volumeID)
+
 	return &replication.PromoteVolumeResponse{}, nil
 }
 
@@ -480,6 +498,18 @@ func (rs *ReplicationServer) DemoteVolume(ctx context.Context,
 
 		return nil, err
 	}
+
+	err = rbdVol.GetImageInfo()
+	if err != nil {
+		log.ErrorLog(ctx, err.Error())
+
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	// store the image creation time for resync
+	if _, ok := imageResyncMap.Load(volumeID); !ok {
+		imageResyncMap.Store(volumeID, rbdVol.CreatedAt.AsTime())
+	}
+
 	mirroringInfo, err := rbdVol.GetImageMirroringInfo()
 	if err != nil {
 		log.ErrorLog(ctx, err.Error())
@@ -538,6 +568,8 @@ func checkRemoteSiteStatus(ctx context.Context, mirrorStatus *librbd.GlobalMirro
 // ResyncVolume extracts the RBD volume information from the volumeID, If the
 // image is present, mirroring is enabled and the image is in demoted state.
 // If yes it will resync the image to correct the split-brain.
+//
+//nolint:gocyclo,cyclop // TODO: reduce complexity
 func (rs *ReplicationServer) ResyncVolume(ctx context.Context,
 	req *replication.ResyncVolumeRequest,
 ) (*replication.ResyncVolumeResponse, error) {
@@ -572,22 +604,11 @@ func (rs *ReplicationServer) ResyncVolume(ctx context.Context,
 		return nil, err
 	}
 
-	mirroringInfo, err := rbdVol.GetImageMirroringInfo()
+	err = rbdVol.CheckImageIsPrimary()
 	if err != nil {
-		// in case of Resync the image will get deleted and gets recreated and
-		// it takes time for this operation.
 		log.ErrorLog(ctx, err.Error())
 
-		return nil, status.Error(codes.Aborted, err.Error())
-	}
-
-	if mirroringInfo.State != librbd.MirrorImageEnabled {
-		return nil, status.Error(codes.InvalidArgument, "image mirroring is not enabled")
-	}
-
-	// return error if the image is still primary
-	if mirroringInfo.Primary {
-		return nil, status.Error(codes.InvalidArgument, "image is in primary state")
+		return nil, getGRPCError(err)
 	}
 
 	mirrorStatus, err := rbdVol.GetImageMirroringStatus()
@@ -637,14 +658,28 @@ func (rs *ReplicationServer) ResyncVolume(ctx context.Context,
 		ready = checkRemoteSiteStatus(ctx, mirrorStatus)
 	}
 
-	err = rbdVol.ResyncVol(localStatus, req.Force)
+	err = rbdVol.GetImageInfo()
 	if err != nil {
-		return nil, getGRPCError(err)
+		return nil, status.Errorf(codes.Internal, "failed to get image info: %s", err.Error())
 	}
 
-	err = checkVolumeResyncStatus(localStatus)
+	ok, err := resyncVolume(ctx, volumeID, rbdVol.CreatedAt)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, status.Errorf(codes.Internal, "failed to check image needs resync: %s", err.Error())
+	}
+
+	if req.Force && ok {
+		err = rbdVol.ResyncVol(localStatus)
+		if err != nil {
+			return nil, getGRPCError(err)
+		}
+	}
+
+	if !ready {
+		err = checkVolumeResyncStatus(localStatus)
+		if err != nil {
+			return nil, status.Error(codes.Internal, err.Error())
+		}
 	}
 
 	err = rbdVol.RepairResyncedImageID(ctx, ready)
@@ -657,6 +692,29 @@ func (rs *ReplicationServer) ResyncVolume(ctx context.Context,
 	}
 
 	return resp, nil
+}
+
+func resyncVolume(
+	ctx context.Context,
+	volumeID string,
+	currentImageTime *timestamppb.Timestamp,
+) (bool, error) {
+	savedImageTime, ok := imageResyncMap.Load(volumeID)
+	if !ok {
+		return false, errors.New("failed to get image creation time")
+	}
+
+	log.UsefulLog(ctx, "savedImageTime=%v, currentImageTime=%v", savedImageTime, currentImageTime)
+	st, ok := savedImageTime.(time.Time)
+	if !ok {
+		return false, errors.New("failed to convert image creation time")
+	}
+
+	if st.Equal(currentImageTime.AsTime()) {
+		return true, nil
+	}
+
+	return false, nil
 }
 
 func getGRPCError(err error) error {
@@ -863,11 +921,13 @@ func checkVolumeResyncStatus(localStatus librbd.SiteMirrorImageStatus) error {
 	// Once the volume on remote cluster is demoted and resync
 	// is completed the image state will be moved to UNKNOWN.
 	// RBD mirror daemon should be always running on the primary cluster.
-	if !localStatus.Up || (localStatus.State != librbd.MirrorImageStatusStateReplaying &&
-		localStatus.State != librbd.MirrorImageStatusStateUnknown) {
-		return fmt.Errorf(
-			"not resyncing. Local status: daemon up=%t image is in %q state",
-			localStatus.Up, localStatus.State)
+	description := localStatus.Description
+	resp, err := getLastSyncInfo(description)
+	if err != nil {
+		return fmt.Errorf("failed to get last sync info: %w", err)
+	}
+	if resp.LastSyncTime == nil {
+		return errors.New("last sync time is nil")
 	}
 
 	return nil

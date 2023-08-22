@@ -173,7 +173,7 @@ type rbdVolume struct {
 	// Network namespace file path to execute nsenter command
 	NetNamespaceFilePath string
 	// RequestedVolSize has the size of the volume requested by the user and
-	// this value will not be updated when doing getImageInfo() on rbdVolume.
+	// this value will not be updated when doing GetImageInfo() on rbdVolume.
 	RequestedVolSize   int64
 	DisableInUseChecks bool
 	readOnly           bool
@@ -716,7 +716,7 @@ func (ri *rbdImage) getCloneDepth(ctx context.Context) (uint, error) {
 			return depth, err
 		}
 
-		err = vol.getImageInfo()
+		err = vol.GetImageInfo()
 		// FIXME: create and destroy the vol inside the loop.
 		// see https://github.com/ceph/ceph-csi/pull/1838#discussion_r598530807
 		vol.ioctx.Destroy()
@@ -922,13 +922,13 @@ func (ri *rbdImage) checkImageChainHasFeature(ctx context.Context, feature uint6
 			return false, err
 		}
 
-		err = rbdImg.getImageInfo()
+		err = rbdImg.GetImageInfo()
 		// FIXME: create and destroy the vol inside the loop.
 		// see https://github.com/ceph/ceph-csi/pull/1838#discussion_r598530807
 		rbdImg.ioctx.Destroy()
 		rbdImg.ioctx = nil
 		if err != nil {
-			// call to getImageInfo returns the parent name even if the parent
+			// call to GetImageInfo returns the parent name even if the parent
 			// is in the trash, when we try to open the parent image to get its
 			// information it fails because it is already in trash. We should
 			// treat error as nil if the parent is not found.
@@ -1057,7 +1057,7 @@ func updateSnapshotDetails(rbdSnap *rbdSnapshot) error {
 	}
 	defer vol.Destroy()
 
-	err = vol.getImageInfo()
+	err = vol.GetImageInfo()
 	if err != nil {
 		return err
 	}
@@ -1153,7 +1153,7 @@ func generateVolumeFromVolumeID(
 			return rbdVol, err
 		}
 	}
-	err = rbdVol.getImageInfo()
+	err = rbdVol.GetImageInfo()
 
 	return rbdVol, err
 }
@@ -1501,7 +1501,7 @@ func (rv *rbdVolume) cloneRbdImageFromSnapshot(
 	}()
 
 	// get image latest information
-	err = rv.getImageInfo()
+	err = rv.GetImageInfo()
 	if err != nil {
 		return fmt.Errorf("failed to get image info of %s: %w", rv, err)
 	}
@@ -1558,9 +1558,9 @@ func (rv *rbdVolume) setImageOptions(ctx context.Context, options *librbd.ImageO
 	return nil
 }
 
-// getImageInfo queries rbd about the given image and returns its metadata, and returns
+// GetImageInfo queries rbd about the given image and returns its metadata, and returns
 // ErrImageNotFound if provided image is not found.
-func (ri *rbdImage) getImageInfo() error {
+func (ri *rbdImage) GetImageInfo() error {
 	image, err := ri.open()
 	if err != nil {
 		return err
@@ -1607,7 +1607,7 @@ func (ri *rbdImage) getImageInfo() error {
 
 // getParent returns parent image if it exists.
 func (ri *rbdImage) getParent() (*rbdImage, error) {
-	err := ri.getImageInfo()
+	err := ri.GetImageInfo()
 	if err != nil {
 		return nil, err
 	}
@@ -1623,7 +1623,7 @@ func (ri *rbdImage) getParent() (*rbdImage, error) {
 	parentImage.RadosNamespace = ri.RadosNamespace
 	parentImage.RbdImageName = ri.ParentName
 
-	err = parentImage.getImageInfo()
+	err = parentImage.GetImageInfo()
 	if err != nil {
 		return nil, err
 	}

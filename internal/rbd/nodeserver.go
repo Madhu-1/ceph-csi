@@ -227,7 +227,7 @@ func (ns *NodeServer) populateRbdVol(
 		}
 	}()
 	// get the image details from the ceph cluster.
-	err = rv.getImageInfo()
+	err = rv.GetImageInfo()
 	if err != nil {
 		log.ErrorLog(ctx, "failed to get image details %s: %v", rv, err)
 
