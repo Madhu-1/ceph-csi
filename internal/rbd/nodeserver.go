@@ -27,6 +27,7 @@ import (
 	csicommon "github.com/ceph/ceph-csi/internal/csi-common"
 	"github.com/ceph/ceph-csi/internal/util"
 	"github.com/ceph/ceph-csi/internal/util/fscrypt"
+	"github.com/ceph/ceph-csi/internal/util/k8s"
 	"github.com/ceph/ceph-csi/internal/util/log"
 
 	librbd "github.com/ceph/go-ceph/rbd"
@@ -721,7 +722,66 @@ func (ns *NodeServer) NodePublishVolume(
 		return nil, err
 	}
 
+	imgInfo, err := lookupRBDImageMetadataStash(req.GetStagingTargetPath())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	if imgInfo.DevicePath == "" {
+		return nil, status.Errorf(codes.Internal,
+			"device is empty in image metadata, at stagingPath: %s",
+			req.GetStagingTargetPath())
+	}
+	// get QOS parameters from the volumeContext
+	qos := getIOQoSParameters(req.GetVolumeContext())
+
+	log.DebugLog(ctx, "volume %s qos settings: %s", volID, qos)
+
+	mj, mn, err := getMajAndMinofDevice(imgInfo.DevicePath)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	log.DebugLog(ctx, "rbd: volume %s device path %s, major %d, minor %d", volID, imgInfo.DevicePath, mj, mn)
+	ioMaxFileContent := ""
+	if qos != "" {
+		// io.max content will be in below format
+		// 252:0 rbps=max wbps=1048576 riops=max wiops=max
+		ioMaxFileContent = fmt.Sprintf("%d:%d %s", mj, mn, qos)
+	}
+	log.DebugLog(ctx, "rbd: volume %s io.max file content %s", volID, ioMaxFileContent)
+	// Adding this check to support other container orchestrators to skip the
+	// kubernetes specific operations.
+	if req.GetVolumeContext()[podNameKey] != "" {
+		c, cErr := k8s.NewK8sClient()
+		if cErr != nil {
+			return nil, status.Errorf(codes.Internal, "failed to connect to Kubernetes to %s", cErr)
+		}
+
+		pod, pErr := getPod(ctx, c, req.GetVolumeContext())
+		if pErr != nil {
+			return nil, status.Errorf(codes.Internal, "failed to get pod %s", pErr)
+		}
+		log.DebugLog(ctx, "rbd: volume %s pod %+v\n\n", volID, pod)
+		podSlicePath, sErr := getPodSlicePath(pod)
+		if sErr != nil {
+			return nil, status.Errorf(codes.Internal, "failed to get pod slice path %s", sErr)
+		}
+		log.DebugLog(ctx, "rbd: volume %s pod slice path %s", volID, podSlicePath)
+
+		containerSlicePaths, cErr := retrieveContainersSliceFolderPath(podSlicePath)
+		if cErr != nil {
+			return nil, status.Errorf(codes.Internal, "failed to get container slice path %s", cErr)
+		}
+		log.DebugLog(ctx, "rbd: volume %s container slice paths %s", volID, containerSlicePaths)
+		for _, containerSlicePath := range containerSlicePaths {
+			log.DebugLog(ctx, "rbd: volume %s container io.max slice path %s", volID, containerSlicePath+"/io.max")
+			wErr := os.WriteFile(containerSlicePath+"/io.max", []byte(ioMaxFileContent), 0o600)
+			if wErr != nil {
+				return nil, status.Errorf(codes.Internal, "failed to write io.max file %s", err)
+			}
+		}
+	}
 	if !notMnt {
+		// TODO (Madhu) write to the io.max as the volume is already mounted
 		return &csi.NodePublishVolumeResponse{}, nil
 	}
 
