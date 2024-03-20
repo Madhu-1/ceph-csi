@@ -19,6 +19,7 @@ package rbd_group
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/ceph/go-ceph/rados"
 
@@ -26,6 +27,13 @@ import (
 	"github.com/ceph/ceph-csi/internal/util"
 )
 
+var (
+	ErrRBDGroupNotConnected = errors.New("RBD group is not connected")
+)
+
+// groupObject provides basic functionality that is shared among other structs
+// in this package. Configuring the journal, and resolving an object by ID are
+// the main functionalities.
 type groupObject struct {
 	clusterID string
 
@@ -41,6 +49,9 @@ type groupObject struct {
 	// journalling related attributes
 	journal     journal.VolumeGroupJournal
 	journalPool string
+
+	// suffix for the object in the journal
+	suffix string
 
 	// id is a unique value for this volume group in the Ceph cluster, it
 	// is used to find the group in the journal.
@@ -62,7 +73,10 @@ func (obj *groupObject) Destroy(ctx context.Context) {
 	}
 }
 
-func (obj *groupObject) resolveByID(ctx context.Context, id string, secrets map[string]string) error {
+// resolveByID connects to the journal and finds the object identified by the
+// id.
+// This function uses the .secrets and .suffix which need to be set in advance.
+func (obj *groupObject) resolveByID(ctx context.Context, id string) error {
 	csiID := util.CSIIdentifier{}
 
 	err := csiID.DecomposeCSIID(id)
@@ -82,10 +96,9 @@ func (obj *groupObject) resolveByID(ctx context.Context, id string, secrets map[
 
 	obj.clusterID = csiID.ClusterID
 	obj.monitors = mons
-	obj.secrets = secrets
 	obj.id = id
 
-	obj.credentials, err = util.NewUserCredentials(secrets)
+	obj.credentials, err = util.NewUserCredentials(obj.secrets)
 	if err != nil {
 		return err
 	}
@@ -145,7 +158,7 @@ func (obj *groupObject) SetJournalNamespace(ctx context.Context, pool, namespace
 		return ErrRBDGroupNotConnected
 	}
 
-	vgj := journal.NewCSIVolumeGroupJournal(groupSuffix)
+	vgj := journal.NewCSIVolumeGroupJournal(obj.suffix)
 	vgj.SetNamespace(namespace)
 	err := vgj.Connect(obj.monitors, namespace, obj.credentials)
 	if err != nil {
@@ -164,4 +177,42 @@ func (obj *groupObject) GetID(ctx context.Context) (string, error) {
 	}
 
 	return obj.id, nil
+}
+
+func (obj *groupObject) checkReservation(ctx context.Context, name string) error {
+	prefix := "" // FIXME? "csi-vol-group-" is the default prefix
+	vgData, err := obj.journal.CheckReservation(ctx, obj.journalPool, name, prefix)
+	if err != nil {
+		return err
+	}
+
+	if vgData == nil {
+		return fmt.Errorf("reservation for %q in pool %q could not be found", name, obj.journalPool)
+	}
+
+	// TODO: use vgData to fill obj
+	obj.id = vgData.GroupUUID
+	obj.name = vgData.GroupName
+
+	// RequestName and GroupName exist as well?
+	//vgData.VolumeGroupAttributes.RequestName
+	//vgData.VolumeGroupAttributes.GroupName
+
+	// map[string]string, key = volumeID, value = snapshotID
+	// vgData.VolumeGroupAttributes.VolumeSnapshotMap
+
+	return nil
+}
+
+func (obj *groupObject) reserveName(ctx context.Context, name string) error {
+	prefix := "" // FIXME? "csi-vol-group-" is the default prefix
+	uniqueName, id, err := obj.journal.ReserveName(ctx, obj.journalPool, name, prefix)
+	if err != nil {
+		return err
+	}
+
+	obj.name = uniqueName
+	obj.id = id
+
+	return nil
 }

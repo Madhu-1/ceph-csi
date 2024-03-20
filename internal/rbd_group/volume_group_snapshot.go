@@ -24,6 +24,10 @@ import (
 	types "github.com/ceph/ceph-csi/internal/rbd_types"
 )
 
+const (
+	volumeGroupSuffix = "vg"
+)
+
 // verify that volumeGroupSnapshot implements the VolumeGroupSnapshot interface
 var _ types.VolumeGroupSnapshot = &volumeGroupSnapshot{}
 
@@ -39,23 +43,33 @@ type volumeGroupSnapshot struct {
 	snapshots []*groupSnapshot
 }
 
-func newVolumeGroupSnapshot(ctx context.Context, parent *volumeGroup, name string) types.VolumeGroupSnapshot {
+func newVolumeGroupSnapshot(ctx context.Context, parent *volumeGroup, name string) (types.VolumeGroupSnapshot, error) {
 	vgs := &volumeGroupSnapshot{
 		groupObject: &groupObject{
-			name: name,
+			suffix: volumeGroupSuffix,
 		},
 		parentGroup: parent,
 	}
 
-	return vgs
+	err := vgs.reserveName(ctx, name)
+	if err != nil {
+		return nil, err
+	}
+
+	return vgs, nil
 }
 
 func GetVolumeGroupSnapshot(ctx context.Context, id string, secrets map[string]string) (types.VolumeGroupSnapshot, error) {
 	// TODO: use the journal to resolve the volumeGroupSnapshot by id
 	// TODO: for each snapshot ID in the group, use GetSnapshot() to resolve the ID to a Snapshot
 
-	vgs := &volumeGroupSnapshot{}
-	err := vgs.resolveByID(ctx, id, secrets)
+	vgs := &volumeGroupSnapshot{
+		groupObject: &groupObject{
+			secrets: secrets,
+			suffix:  volumeGroupSuffix,
+		},
+	}
+	err := vgs.resolveByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

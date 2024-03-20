@@ -25,6 +25,10 @@ import (
 	types "github.com/ceph/ceph-csi/internal/rbd_types"
 )
 
+const (
+	groupSnapshotSuffix = "groupsnap"
+)
+
 // verify that rbdSnapshot type implements the Snapshot interface
 var _ types.Snapshot = &groupSnapshot{}
 
@@ -45,7 +49,8 @@ type groupSnapshot struct {
 func newGroupSnapshot(group *volumeGroup, parent types.Volume, name string, snapID uint64) types.Snapshot {
 	gs := &groupSnapshot{
 		groupObject: &groupObject{
-			name: name,
+			name:   name,
+			suffix: groupSnapshotSuffix,
 		},
 		parent: parent,
 		snapID: snapID,
@@ -59,8 +64,13 @@ func newGroupSnapshot(group *volumeGroup, parent types.Volume, name string, snap
 func GetSnapshot(ctx context.Context, id string, secrets map[string]string) (types.Snapshot, error) {
 	// TODO: use the journal to resolve the groupSnapshot by ID
 
-	gs := &groupSnapshot{}
-	err := gs.resolveByID(ctx, id, secrets)
+	gs := &groupSnapshot{
+		groupObject: &groupObject{
+			secrets: secrets,
+			suffix:  groupSnapshotSuffix,
+		},
+	}
+	err := gs.resolveByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

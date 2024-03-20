@@ -18,7 +18,6 @@ package rbd_group
 
 import (
 	"context"
-	"errors"
 
 	librbd "github.com/ceph/go-ceph/rbd"
 
@@ -27,11 +26,7 @@ import (
 )
 
 const (
-	groupSuffix = "rbd-group"
-)
-
-var (
-	ErrRBDGroupNotConnected = errors.New("RBD group is not connected")
+	groupSuffix = "group"
 )
 
 // volumeGroup handles all requests for 'rbd group' operations.
@@ -60,6 +55,7 @@ func NewVolumeGroup(ctx context.Context, name, clusterID string, secrets map[str
 			clusterID:   clusterID,
 			credentials: creds,
 			secrets:     secrets,
+			suffix:      groupSuffix,
 		},
 	}
 
@@ -69,8 +65,13 @@ func NewVolumeGroup(ctx context.Context, name, clusterID string, secrets map[str
 func GetVolumeGroup(ctx context.Context, id string, secrets map[string]string) (types.VolumeGroup, error) {
 	var err error
 
-	vg := &volumeGroup{}
-	err = vg.resolveByID(ctx, id, secrets)
+	vg := &volumeGroup{
+		groupObject: &groupObject{
+			secrets: secrets,
+			suffix:  groupSuffix,
+		},
+	}
+	err = vg.resolveByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +111,7 @@ func (vg *volumeGroup) Create(ctx context.Context, prefix string) error {
 		return err
 	}
 
-	journalPoolID, poolID, err := util.GetPoolIDs(
+	_, poolID, err := util.GetPoolIDs(
 		ctx,
 		vg.monitors,
 		vg.journalPool,
@@ -123,7 +124,6 @@ func (vg *volumeGroup) Create(ctx context.Context, prefix string) error {
 	id, uniqueName, err := vg.journal.ReserveName(
 		ctx,
 		vg.journalPool,
-		journalPoolID,
 		vg.name,
 		prefix)
 	if err != nil {
@@ -215,7 +215,7 @@ func (vg *volumeGroup) CreateSnapshot(ctx context.Context, snapName string) (typ
 
 	// TODO: if the snapName already exists, use that as return value
 
-	return newVolumeGroupSnapshot(ctx, vg, snapName), nil
+	return newVolumeGroupSnapshot(ctx, vg, snapName)
 }
 
 func (vg *volumeGroup) deleteSnapshot(ctx context.Context, snapName string) error {
