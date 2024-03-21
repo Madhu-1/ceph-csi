@@ -385,7 +385,7 @@ func (ri *rbdImage) Connect(cr *util.Credentials) error {
 
 // Destroy cleans up the rbdVolume and closes the connection to the Ceph
 // cluster in case one was setup.
-func (ri *rbdImage) Destroy() {
+func (ri *rbdImage) Destroy(ctx context.Context) {
 	if ri.ioctx != nil {
 		ri.ioctx.Destroy()
 	}
@@ -777,7 +777,7 @@ func flattenClonedRbdImages(
 	rv.Pool = pool
 	rv.RbdImageName = rbdImageName
 
-	defer rv.Destroy()
+	defer rv.Destroy(ctx)
 	err := rv.Connect(cr)
 	if err != nil {
 		log.ErrorLog(ctx, "failed to open connection %s; err %v", rv, err)
@@ -1045,7 +1045,7 @@ func genSnapFromSnapID(
 	}
 	defer func() {
 		if err != nil {
-			rbdSnap.Destroy()
+			rbdSnap.Destroy(ctx)
 		}
 	}()
 
@@ -1064,31 +1064,12 @@ func genSnapFromSnapID(
 		}
 	}
 
-	err = updateSnapshotDetails(rbdSnap)
+	err = rbdSnap.getImageInfo()
 	if err != nil {
 		return rbdSnap, fmt.Errorf("failed to update snapshot details for %q: %w", rbdSnap, err)
 	}
 
 	return rbdSnap, err
-}
-
-// updateSnapshotDetails will copy the details from the rbdVolume to the
-// rbdSnapshot. example copying size from rbdVolume to rbdSnapshot.
-func updateSnapshotDetails(rbdSnap *rbdSnapshot) error {
-	vol := rbdSnap.toVolume()
-	err := vol.Connect(rbdSnap.conn.Creds)
-	if err != nil {
-		return err
-	}
-	defer vol.Destroy()
-
-	err = vol.getImageInfo()
-	if err != nil {
-		return err
-	}
-	rbdSnap.VolSize = vol.VolSize
-
-	return nil
 }
 
 // generateVolumeFromVolumeID generates a rbdVolume structure from the provided identifier.
@@ -2128,7 +2109,7 @@ func genVolFromVolIDWithMigration(
 	}
 	rv, err := GenVolFromVolID(ctx, volID, cr, secrets)
 	if err != nil {
-		rv.Destroy()
+		rv.Destroy(ctx)
 	}
 
 	return rv, err

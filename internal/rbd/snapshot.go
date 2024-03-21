@@ -115,19 +115,21 @@ func cleanUpSnapshot(
 
 func (rbdSnap *rbdSnapshot) toVolume() *rbdVolume {
 	return &rbdVolume{
-		ClusterID:      rbdSnap.ClusterID,
-		VolID:          rbdSnap.VolID,
-		Monitors:       rbdSnap.Monitors,
-		Pool:           rbdSnap.Pool,
-		JournalPool:    rbdSnap.JournalPool,
-		RadosNamespace: rbdSnap.RadosNamespace,
-		RbdImageName:   rbdSnap.RbdSnapName,
-		ImageID:        rbdSnap.ImageID,
-		// copyEncryptionConfig cannot be used here because the volume and the
-		// snapshot will have the same volumeID which cases the panic in
-		// copyEncryptionConfig function.
-		blockEncryption: rbdSnap.blockEncryption,
-		fileEncryption:  rbdSnap.fileEncryption,
+		rbdImage: rbdImage{
+			ClusterID:      rbdSnap.ClusterID,
+			VolID:          rbdSnap.VolID,
+			Monitors:       rbdSnap.Monitors,
+			Pool:           rbdSnap.Pool,
+			JournalPool:    rbdSnap.JournalPool,
+			RadosNamespace: rbdSnap.RadosNamespace,
+			RbdImageName:   rbdSnap.RbdSnapName,
+			ImageID:        rbdSnap.ImageID,
+			// copyEncryptionConfig cannot be used here because the volume and the
+			// snapshot will have the same volumeID which cases the panic in
+			// copyEncryptionConfig function.
+			blockEncryption: rbdSnap.blockEncryption,
+			fileEncryption:  rbdSnap.fileEncryption,
+		},
 	}
 }
 
