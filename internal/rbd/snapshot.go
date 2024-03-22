@@ -20,9 +20,24 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/container-storage-interface/spec/lib/go/csi"
+
+	types "github.com/ceph/ceph-csi/internal/rbd_types"
 	"github.com/ceph/ceph-csi/internal/util"
 	"github.com/ceph/ceph-csi/internal/util/log"
 )
+
+var _ types.Snapshot = &rbdSnapshot{}
+
+func (snap *rbdSnapshot) Destroy(ctx context.Context) {}
+
+func (snap *rbdSnapshot) Delete(ctx context.Context) error {
+	return errors.New("BUG: rbdSnapshot does not implement Delete()")
+}
+
+func (snap *rbdSnapshot) ToCSISnapshot(ctx context.Context) (*csi.Snapshot, error) {
+	return nil, errors.New("BUG: rbdSnapshot does not implement ToCSISnapshot()")
+}
 
 func createRBDClone(
 	ctx context.Context,

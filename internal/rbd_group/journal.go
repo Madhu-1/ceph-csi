@@ -48,6 +48,7 @@ type groupObject struct {
 
 	// journalling related attributes
 	journal     journal.VolumeGroupJournal
+	journalConf *journal.VolumeGroupJournalConfig
 	journalPool string
 
 	// suffix for the object in the journal
@@ -158,14 +159,15 @@ func (obj *groupObject) SetJournalNamespace(ctx context.Context, pool, namespace
 		return ErrRBDGroupNotConnected
 	}
 
-	vgj := journal.NewCSIVolumeGroupJournal(obj.suffix)
-	vgj.SetNamespace(namespace)
-	err := vgj.Connect(obj.monitors, namespace, obj.credentials)
+	vgjc := journal.NewCSIVolumeGroupJournal(obj.suffix)
+	vgjc.SetNamespace(namespace)
+	vgj, err := vgjc.Connect(obj.monitors, namespace, obj.credentials)
 	if err != nil {
 		return err
 	}
 
 	obj.journal = vgj
+	obj.journalConf = &vgjc
 	obj.journalPool = pool
 
 	return nil

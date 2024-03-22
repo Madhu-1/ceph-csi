@@ -24,7 +24,7 @@ import (
 
 type Volume interface {
 	// Destroy frees the resources used by the Volume.
-	Destroy(/* TODO pass context.Context */)
+	Destroy(ctx context.Context)
 
 	GetID(ctx context.Context) (string, error)
 

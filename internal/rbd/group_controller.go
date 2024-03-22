@@ -147,7 +147,7 @@ func (cs *ControllerServer) CreateVolumeGroupSnapshot(ctx context.Context, req *
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 	for _, v := range volumes {
-		defer v.Destroy()
+		defer v.Destroy(ctx)
 	}
 
 	config, err := getCephConfig(ctx, req.GetParameters(), req.GetSecrets())
