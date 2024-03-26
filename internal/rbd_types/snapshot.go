@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//nolint:golint // this package should be renamed to rbd/types
 package rbd_types
 
 import (

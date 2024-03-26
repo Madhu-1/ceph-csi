@@ -39,7 +39,7 @@ type cephConfig struct {
 	groupNamePrefix string
 }
 
-func getCephConfig(ctx context.Context, params, secrets map[string]string) (*cephConfig, error) {
+func getCephConfig(ctx context.Context, params map[string]string) (*cephConfig, error) {
 	clusterID, err := util.GetClusterID(params)
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ func getVolumesForGroup(ctx context.Context, volumeIDs []string, secrets map[str
 	for i, id := range volumeIDs {
 		volume, err := GenVolFromVolID(ctx, id, creds, secrets)
 		if err != nil {
- 			return nil, err
+			return nil, err
 		}
 
 		volumes[i] = volume
@@ -150,7 +150,7 @@ func (cs *ControllerServer) CreateVolumeGroupSnapshot(ctx context.Context, req *
 		defer v.Destroy(ctx)
 	}
 
-	config, err := getCephConfig(ctx, req.GetParameters(), req.GetSecrets())
+	config, err := getCephConfig(ctx, req.GetParameters())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
