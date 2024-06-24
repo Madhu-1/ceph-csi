@@ -1666,7 +1666,7 @@ func (ri *rbdImage) flattenParent(ctx context.Context, hardLimit, softLimit uint
 	if parentImage == nil {
 		return nil
 	}
-	defer parentImage.Destroy()
+	defer parentImage.Destroy(ctx)
 
 	return parentImage.flattenRbdImage(ctx, false, hardLimit, softLimit)
 }
