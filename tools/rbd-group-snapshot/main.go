@@ -205,7 +205,6 @@ func (rgt *rbdGroupTest) restoreFromSnapshot() {
 //		panic(err)
 //	}
 
-/*
 	fmt.Printf("restoring image %q from parent %q at snapshot %q\n", restoreName, imageNames[0], snaps[0].Name)
 	snap := img.GetSnapshot(snaps[0].Name)
 	err = snap.Protect()
@@ -214,11 +213,11 @@ func (rgt *rbdGroupTest) restoreFromSnapshot() {
 	}
 	defer snap.Unprotect()
 
-	err = rbd.CloneFromImage(img, snaps[0].Name, rgt.ioctx, restoreName, options)
+	//err = rbd.CloneFromImage(img, snaps[0].Name, rgt.ioctx, restoreName, options)
+	err = rbd.CloneImageByID(rgt.ioctx, imageNames[0], snaps[0].Id, rgt.ioctx, restoreName, options)
 	if err != nil {
 		panic(err)
 	}
-*/
 
 /*
 	// alternative to the above -- segfaults, needs a snapshot
@@ -243,6 +242,7 @@ func (rgt *rbdGroupTest) restoreFromSnapshot() {
 */
 
 	// alternative to the above
+/*
 	snapname := "tmp-snap"
 	snap, err := img.CreateSnapshot(snapname)
 	if err != nil {
@@ -273,6 +273,7 @@ func (rgt *rbdGroupTest) restoreFromSnapshot() {
 	if err != nil {
 		panic(err)
 	}
+*/
 }
 
 func (rgt *rbdGroupTest) removeRestoredImage() {

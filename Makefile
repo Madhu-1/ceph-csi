@@ -169,7 +169,7 @@ e2e.test: check-env
 
 .PHONY: rbd-group-snapshot
 rbd-group-snapshot:
-	go build -o _output/rbd-group-snapshot ./tools/rbd-group-snapshot
+	go build $(GO_TAGS) -o _output/rbd-group-snapshot ./tools/rbd-group-snapshot
 
 #
 # Update the generated deploy/ files when the template changed. This requires
