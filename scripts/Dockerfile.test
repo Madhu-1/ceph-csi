@@ -8,7 +8,8 @@
 # little different.
 #
 
-FROM registry.fedoraproject.org/fedora:39
+#FROM registry.fedoraproject.org/fedora:39
+FROM quay.ceph.io/ceph-ci/ceph:squid
 
 ARG GOPATH=/go
 ARG GOROOT=/usr/local/go
