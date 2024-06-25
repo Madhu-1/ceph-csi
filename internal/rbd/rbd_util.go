@@ -96,6 +96,7 @@ type rbdImage struct {
 	// VolID is the volume ID that is exchanged with CSI drivers,
 	// identifying this rbd image
 	VolID    string `json:"volID"`
+	GroupID  string
 	Monitors string
 	// JournalPool is the ceph pool in which the CSI Journal/CSI snapshot Journal is
 	// stored
@@ -1131,6 +1132,7 @@ func generateVolumeFromVolumeID(
 	rbdVol.ReservedID = vi.ObjectUUID
 	rbdVol.ImageID = imageAttributes.ImageID
 	rbdVol.Owner = imageAttributes.Owner
+	rbdVol.GroupID = imageAttributes.GroupID
 
 	if imageAttributes.KmsID != "" && imageAttributes.EncryptionType == util.EncryptionTypeBlock {
 		err = rbdVol.configureBlockEncryption(imageAttributes.KmsID, secrets)

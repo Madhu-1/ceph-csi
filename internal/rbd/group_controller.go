@@ -92,7 +92,7 @@ func (cs *ControllerServer) GroupControllerGetCapabilities(context.Context, *csi
 	}, nil
 }
 
-func getVolumesForGroup(ctx context.Context, volumeIDs []string, secrets map[string]string) ([]types.Volume, error) {
+func (cs *ControllerServer) GetVolumesForGroup(ctx context.Context, volumeIDs []string, secrets map[string]string) ([]types.Volume, error) {
 	creds, err := util.NewUserCredentials(secrets)
 	if err != nil {
 		return nil, err
@@ -142,7 +142,7 @@ func (cs *ControllerServer) CreateVolumeGroupSnapshot(ctx context.Context, req *
 	// 5. remove all rbd-images from the RBDVolumeGroup
 	// 6. return the RBDVolumeGroup-name and list of snapshots
 
-	volumes, err := getVolumesForGroup(ctx, req.GetSourceVolumeIds(), req.GetSecrets())
+	volumes, err := cs.GetVolumesForGroup(ctx, req.GetSourceVolumeIds(), req.GetSecrets())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}

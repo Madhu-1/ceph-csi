@@ -17,10 +17,15 @@ limitations under the License.
 package rbd
 
 import (
+	"context"
+
 	corerbd "github.com/ceph/ceph-csi/internal/rbd"
+	"github.com/ceph/ceph-csi/internal/util"
 
 	"github.com/csi-addons/spec/lib/go/volumegroup"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // VolumeGroupServer struct of rbd CSI driver with supported methods of VolumeGroup
@@ -43,4 +48,56 @@ func NewVolumeGroupServer(c *corerbd.ControllerServer) *VolumeGroupServer {
 
 func (vs *VolumeGroupServer) RegisterService(server grpc.ServiceRegistrar) {
 	volumegroup.RegisterControllerServer(server, vs)
+}
+
+// CreateVolumeGroup create the volumegroup in rbd and sends the
+// volumeGroupHandle in Response
+func (vs *VolumeGroupServer) CreateVolumeGroup(ctx context.Context, req *volumegroup.CreateVolumeGroupRequest) (*volumegroup.CreateVolumeGroupResponse, error) {
+	// Validate the request
+	if req.GetName() == "" {
+		return nil, status.Error(codes.InvalidArgument, "Name is required")
+	}
+	if req.VolumeIds == nil {
+		return nil, status.Error(codes.InvalidArgument, "VolumeIds is required")
+	}
+	cr, err := util.NewUserCredentials(req.GetSecrets())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	defer cr.DeleteCredentials()
+	// get volumes from the volumeIds
+	volumes, err := vs.ControllerServer.GetVolumesForGroup(ctx, req.VolumeIds, req.GetSecrets())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	// Either all the volumes should be part of the group or few can be part of
+	// a group but all the volumes should not belong to two groups
+	volumeGroupName := ""
+	if len(volumes) > 0 {
+		volumeGroupName = volumes[0].GetGroupID(ctx)
+	}
+
+	for _, v := range volumes {
+		groupID := v.GetGroupID(ctx)
+		if groupID != "" {
+			if groupID != volumeGroupName {
+				return nil, status.Error(codes.InvalidArgument, "All volumes should belong to same group")
+			}
+			volumeGroupName = groupID
+		}
+	}
+	// if volumeGroupName is set means group already exists we need to add the
+	// volumes to the group and return the existing groupID
+	if volumeGroupName != "" {
+		// add the volumes to the group
+		// return the groupID
+		return &volumegroup.CreateVolumeGroupResponse{}, nil
+	}
+	
+	// reserve the groupid and update group with all images
+	// flatten the rbd image(s)?
+	// create the rbd group
+	// return the groupID
+	return &volumegroup.CreateVolumeGroupResponse{}, nil
 }

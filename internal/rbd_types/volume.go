@@ -28,6 +28,7 @@ type Volume interface {
 	Destroy(ctx context.Context)
 
 	GetID(ctx context.Context) (string, error)
+	GetGroupID(ctx context.Context) (string)
 
 	AddToGroup(ctx context.Context, ioctx *rados.IOContext, group string) error
 	RemoveFromGroup(ctx context.Context, ioctx *rados.IOContext, group string) error

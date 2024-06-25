@@ -22,6 +22,10 @@ func (ri *rbdImage) GetID(ctx context.Context) (string, error) {
 	return ri.VolID, nil
 }
 
+func (ri *rbdImage) GetGroupID(ctx context.Context) string {
+	return ri.GroupID
+}
+
 // AddToGroup adds the image to the group with the ioctx. This is called from
 // the rbd_group package, as that can pass the ioctx of the group.
 func (ri *rbdImage) AddToGroup(ctx context.Context, ioctx *rados.IOContext, group string) error {

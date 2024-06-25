@@ -41,6 +41,14 @@ type CreateVolumeGroupRequest struct {
 	// This field is OPTIONAL. Refer to the `Secrets Requirements`
 	// section on how to use this field.
 	Secrets map[string]string `protobuf:"bytes,3,rep,name=secrets,proto3" json:"secrets,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	// Specify volume_ids that will be in the modified volume group.
+	// This list will be compared with the volume_ids in the existing
+	// group.
+	// New ones will be added and missing ones will be removed.
+	// If no volume_ids are provided, all existing volumes will
+	// be removed from the group.
+	// This field is OPTIONAL.
+	VolumeIds []string `protobuf:"bytes,2,rep,name=volume_ids,json=volumeIds,proto3" json:"volume_ids,omitempty"`
 }
 
 func (x *CreateVolumeGroupRequest) Reset() {
