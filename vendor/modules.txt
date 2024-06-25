@@ -204,7 +204,7 @@ github.com/ceph/ceph-csi/api/deploy/kubernetes/cephfs
 github.com/ceph/ceph-csi/api/deploy/kubernetes/nfs
 github.com/ceph/ceph-csi/api/deploy/kubernetes/rbd
 github.com/ceph/ceph-csi/api/deploy/ocp
-# github.com/ceph/go-ceph v0.28.0
+# github.com/ceph/go-ceph v0.28.0 => github.com/nixpanic/go-ceph v0.0.0-20240624135224-4596b70b9942
 ## explicit; go 1.19
 github.com/ceph/go-ceph/cephfs
 github.com/ceph/go-ceph/cephfs/admin
@@ -1804,6 +1804,7 @@ sigs.k8s.io/structured-merge-diff/v4/value
 ## explicit; go 1.12
 sigs.k8s.io/yaml
 sigs.k8s.io/yaml/goyaml.v2
+# github.com/ceph/go-ceph => github.com/nixpanic/go-ceph v0.0.0-20240624135224-4596b70b9942
 # code.cloudfoundry.org/gofileutils => github.com/cloudfoundry/gofileutils v0.0.0-20170111115228-4d0c80011a0f
 # github.com/ceph/ceph-csi/api => ./api
 # github.com/portworx/sched-ops => github.com/portworx/sched-ops v0.20.4-openstorage-rc3

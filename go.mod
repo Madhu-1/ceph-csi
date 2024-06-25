@@ -189,6 +189,8 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
+replace github.com/ceph/go-ceph => github.com/nixpanic/go-ceph v0.0.0-20240624135224-4596b70b9942
+
 replace (
 	code.cloudfoundry.org/gofileutils => github.com/cloudfoundry/gofileutils v0.0.0-20170111115228-4d0c80011a0f
 	github.com/ceph/ceph-csi/api => ./api
