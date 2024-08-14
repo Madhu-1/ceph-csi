@@ -73,4 +73,8 @@ type Manager interface {
 	// GetMirrorSource returns the source of the mirror for the given volume or group.
 	GetMirrorSource(ctx context.Context, volumeID string,
 		rep *replication.ReplicationSource) ([]Volume, Mirror, error)
+
+	// RegenerateVolumeGroupJournal regenerate the omap data for the volume group.
+	// returns the volume group handle
+	RegenerateVolumeGroupJournal(ctx context.Context, groupID, requestName string, volumeIds []string) (string, error)
 }
