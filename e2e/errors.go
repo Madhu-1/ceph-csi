@@ -17,6 +17,8 @@ limitations under the License.
 package e2e
 
 import (
+	"context"
+	"errors"
 	"strings"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -27,7 +29,7 @@ func isRetryableAPIError(err error) bool {
 	// These errors may indicate a transient error that we can retry in tests.
 	if apierrors.IsInternalError(err) || apierrors.IsTimeout(err) || apierrors.IsServerTimeout(err) ||
 		apierrors.IsTooManyRequests(err) || utilnet.IsProbableEOF(err) || utilnet.IsConnectionReset(err) ||
-		utilnet.IsConnectionRefused(err) {
+		utilnet.IsConnectionRefused(err) || errors.Is(err, context.DeadlineExceeded) {
 		return true
 	}
 
